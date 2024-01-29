@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <v-btn>Button</v-btn>
+    <v-btn @click="openFile">Button</v-btn>
     <v-chip>Chip</v-chip>
   </div>
   <div>
@@ -50,5 +50,10 @@ const nodes = reactive({
         children: [],
     },
 });
+
+const openFile = async () => {
+  const filePath = await window.api.openFile()
+  console.log(filePath)
+};
 </script>
 
