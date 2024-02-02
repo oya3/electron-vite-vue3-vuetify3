@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <v-icon :icon="mdiAccount" />Main Contents
     <v-btn @click="openFile">Button</v-btn>
     <v-chip>Chip</v-chip>
   </div>

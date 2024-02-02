@@ -20,12 +20,20 @@
     <!--   <v-list-item prepend-icon="mdiAccount" title="About" value="about"></v-list-item> -->
     <!-- </v-list> -->
     <v-list nav>
-      <v-list-item title="Home" value="home">
+      <v-list-item title="Home" value="home" @click="$router.push({ path: '/' })">
+      <!-- <v-list-item title="Home" value="home" @click="$router.push('/home')"> -->
         <template v-slot:prepend>
           <v-icon :icon="mdiAccount" />
         </template>
       </v-list-item>
-      <v-list-item title="About" value="about">
+      <v-list-item title="Chart" value="chart" @click="$router.push({ path: '/chart' })">
+      <!-- <v-list-item title="Chart" value="chart" @click="$router.push('/chart')"> -->
+        <template v-slot:prepend>
+          <v-icon :icon="mdiAccount" />
+        </template>
+      </v-list-item>
+      <v-list-item title="About" value="about" @click="$router.push({ path: '/about' })">
+      <!-- <v-list-item title="About" value="about" @click="$router.push('/about')"> -->
         <template v-slot:prepend>
           <v-icon :icon="mdiAccount" />
         </template>
@@ -35,7 +43,7 @@
 
   <v-main>
     <v-container>
-      <v-icon :icon="mdiAccount" />Main Contents
+      <router-view />
     </v-container>
   </v-main>
 </v-app>
