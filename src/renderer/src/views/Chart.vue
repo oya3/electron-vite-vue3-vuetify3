@@ -1,9 +1,13 @@
 <template>
   <Bar
-    id="my-chart-id"
+  id="my-chart-id"
     :options="chartOptions"
     :data="chartData"
+    :width="600"
+    :height="400"
   />
+  <!-- <div style="width: 100%; height: 100%;"> -->
+  <!-- </div> -->
 </template>
 
 <script>
@@ -58,6 +62,7 @@ export default {
             zoom: {
               wheel: {
                 enabled: true,
+                speed: 0.01,  // ズームの速度を調整
               },
               pinch: {
                 enabled: true
