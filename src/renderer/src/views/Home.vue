@@ -7,10 +7,26 @@
   <div>
      <Tree :config="config" :nodes="nodes"></Tree>
   </div>
+
+  <v-container class="bg-surface-variant">
+    <v-row no-gutters>
+      <v-col
+        v-for="n in 3"
+        :key="n"
+        cols="12"
+        sm="4"
+      >
+        <v-sheet class="ma-2 pa-2">
+          One of three columns
+        </v-sheet>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 
 <script setup>
+import { mdiAccount } from '@mdi/js'
 import 'vue3-treeview/dist/style.css';
 import Tree from 'vue3-treeview';
 import { ref, reactive } from 'vue';
