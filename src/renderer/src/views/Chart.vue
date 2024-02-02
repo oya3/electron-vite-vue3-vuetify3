@@ -9,8 +9,9 @@
 <script>
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import zoomPlugin from 'chartjs-plugin-zoom';
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, zoomPlugin)
 
 export default {
   name: 'BarChart',
@@ -22,37 +23,48 @@ export default {
         datasets: [
           {
             label: "系列Ａ",
-            data: [10, 20,  5, 15, 10],
+            data: [10, 20,  5, 15, 50],
             backgroundColor: "red"
           },
           {
             label: "系列Ｂ",
             data: [ 5, 10, 10,  5,  8],
             backgroundColor: "blue"
+          },
+          {
+            label: "系列C",
+            data: [ 15, 20, 20,  15,  18],
+            backgroundColor: "green"
           }
         ]
       },
       chartOptions: {
-        responsive: false,
-        title: {
-          display: true,
-          fontSize: 20,
-          text: "積上げ棒グラフ"
-        },
-        legend: {
-          position: 'bottom'
-        },
+        responsive: true,
         scales: {
-          xAxes: [
-            {
+          x: {
               stacked: true  // 積み上げの指定
+          },
+          y: {
+            stacked: true  //  積み上げの指定
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            fontSize: 20,
+            text: "積上げ棒グラフ"
+          },
+          zoom: {
+            zoom: {
+              wheel: {
+                enabled: true,
+              },
+              pinch: {
+                enabled: true
+              },
+              mode: 'xy',
             }
-          ],
-          yAxes: [
-            {
-              stacked: true  //  積み上げの指定
-            }
-          ]
+          }
         }
       }
     }
