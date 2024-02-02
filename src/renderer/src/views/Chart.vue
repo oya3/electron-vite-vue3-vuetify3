@@ -18,11 +18,42 @@ export default {
   data() {
     return {
       chartData: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [40, 20, 12] } ]
+        labels:  ["00年", "05年", "10年", "15年", "20年"],
+        datasets: [
+          {
+            label: "系列Ａ",
+            data: [10, 20,  5, 15, 10],
+            backgroundColor: "red"
+          },
+          {
+            label: "系列Ｂ",
+            data: [ 5, 10, 10,  5,  8],
+            backgroundColor: "blue"
+          }
+        ]
       },
       chartOptions: {
-        responsive: true
+        responsive: false,
+        title: {
+          display: true,
+          fontSize: 20,
+          text: "積上げ棒グラフ"
+        },
+        legend: {
+          position: 'bottom'
+        },
+        scales: {
+          xAxes: [
+            {
+              stacked: true  // 積み上げの指定
+            }
+          ],
+          yAxes: [
+            {
+              stacked: true  //  積み上げの指定
+            }
+          ]
+        }
       }
     }
   }
