@@ -7,7 +7,7 @@
   <div>
      <Tree :config="config" :nodes="nodes"></Tree>
   </div>
-
+  
   <v-container class="bg-surface-variant">
     <v-row no-gutters>
       <v-col

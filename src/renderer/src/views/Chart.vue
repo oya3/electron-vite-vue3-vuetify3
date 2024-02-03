@@ -1,10 +1,12 @@
 <template>
   <Bar
-    id="my-chart-id"
+    ref="chart01"
     :options="chartOptions2"
     :data="chartData2"
   />
-  <div>  <!-- <v-container class="bg-surface-variant"> -->
+  <v-btn @click="reset_chart01">reset</v-btn>
+  <!-- v-container だと拡大時に追従してくれない -->
+  <div style="width: 100%; height: 100%;">  <!-- <v-container class="bg-surface-variant"> -->
     <v-row style="width: 100%; height: 100%;">
       <v-col
         cols="6"
@@ -36,6 +38,12 @@ ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale,
 export default {
   name: 'BarChart',
   components: { Bar },
+  methods: {
+    reset_chart01(){
+      this.$refs.chart01.chart.resetZoom()
+      console.log("resest");
+    },
+  },
   data() {
     return {
       chartData2: {
