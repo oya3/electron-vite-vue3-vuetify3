@@ -1,6 +1,6 @@
 <template>
 <v-app>
-  <v-app-bar color="primary">
+  <v-app-bar color="titlebar">
 
     <v-app-bar-nav-icon 
       variant="text"
@@ -16,7 +16,7 @@
       <v-switch
         v-model="darkTheme"
         @update:model-value="changeTheme"
-        :prepend-icon="darkTheme ? 'mdi-weather-night' : 'mdi-weather-sunny'"
+        :prepend-icon="darkTheme ? mdiWeatherNight : mdiWeatherSunny"
         hide-details
         inset
         class="mr-auto"
@@ -57,8 +57,8 @@
 </template>
 
 <script setup>
-import { mdiHomeAccount, mdiChartBar, mdiInformationOutline, mdiAccount } from '@mdi/js'
-import { ref } from 'vue'
+import { mdiHomeAccount, mdiChartBar, mdiInformationOutline, mdiWeatherNight, mdiWeatherSunny, mdiAccount } from '@mdi/js'
+import { ref, provide } from 'vue'
 import { useTheme } from 'vuetify'
 
 let drawer = ref(null)
@@ -68,6 +68,8 @@ const theme = useTheme()
 const changeTheme = () => {
   theme.global.name.value = darkTheme.value ? 'dark' : 'light'
 }
+
+provide('darkTheme', darkTheme) // テーマの状態を提供
 </script>
 
 <!-- <script> -->

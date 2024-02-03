@@ -4,7 +4,8 @@
     <v-btn @click="openFile">Button</v-btn>
     <v-chip>Chip</v-chip>
   </div>
-  <div>
+  <div :class="{'dark': darkTheme}">
+    <div>{{message}}</div>
      <Tree :config="config" :nodes="nodes"></Tree>
   </div>
   
@@ -26,16 +27,30 @@
 
 
 <script setup>
-import { mdiAccount } from '@mdi/js'
+import { mdiAccount, mdiFolderOpen, mdiFolder } from '@mdi/js'
 import 'vue3-treeview/dist/style.css';
 import Tree from 'vue3-treeview';
-import { ref, reactive } from 'vue';
+import { ref, reactive, inject, watchEffect } from 'vue';
 
 const config = ref({
     roots: ["id1", "id2"], // 第一階層のkey
     checkboxes: true, // チェックボックスあり
     checkMode: 0, // 親階層をチェックした際に子階層もチェックする
     padding: 22,
+/*
+    openedIcon: {
+      type: "shape",
+      d: mdiFolderOpen,
+      viewBox: "0 0 24 24",
+      stroke: "currentColor",
+    },
+    closedIcon: {
+      type: "shape",
+      d: mdiFolder,
+      viewBox: "0 0 24 24",
+      stroke: "currentColor",
+    },
+*/
 });
 
 const nodes = reactive({
@@ -72,5 +87,29 @@ const openFile = async () => {
   const filePath = await window.api.openFile()
   console.log(filePath)
 };
+
+const darkTheme = inject('darkTheme')
+const message = ref(false)
+
+watchEffect(() => {
+  // nowThemeの値が変更されたときに何かを実行する
+  message.value = darkTheme.value
+  console.log('darkTheme.value:', darkTheme.value)
+})
 </script>
 
+<style>
+.dark .tree .node-text {
+  color: #fff;
+}
+.dark .tree svg path {
+  fill: #fff !important;
+}
+.dark .tree .node-wrapper:focus {
+  background-color: #888;
+}
+.dark .tree .node-wrapper:hover {
+  background-color: #888;
+}
+
+</style>
