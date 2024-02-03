@@ -10,6 +10,18 @@
     <v-app-bar-title>
       Application
     </v-app-bar-title>
+
+    <!-- dark theme switch -->
+    <template v-slot:append>
+      <v-switch
+        v-model="darkTheme"
+        @update:model-value="changeTheme"
+        :prepend-icon="darkTheme ? 'mdi-weather-night' : 'mdi-weather-sunny'"
+        hide-details
+        inset
+        class="mr-auto"
+      />
+    </template>
   </v-app-bar>
 
   <v-navigation-drawer
@@ -18,17 +30,17 @@
     <v-list nav>
       <v-list-item title="Home" value="home" @click="$router.push({ path: '/' })">
         <template v-slot:prepend>
-          <v-icon :icon="mdiAccount" />
+          <v-icon :icon="mdiHomeAccount" />
         </template>
       </v-list-item>
       <v-list-item title="Chart" value="chart" @click="$router.push({ path: '/chart' })">
         <template v-slot:prepend>
-          <v-icon :icon="mdiAccount" />
+          <v-icon :icon="mdiChartBar" />
         </template>
       </v-list-item>
       <v-list-item title="About" value="about" @click="$router.push({ path: '/about' })">
         <template v-slot:prepend>
-          <v-icon :icon="mdiAccount" />
+          <v-icon :icon="mdiInformationOutline" />
         </template>
       </v-list-item>
     </v-list>
@@ -45,9 +57,17 @@
 </template>
 
 <script setup>
-import { mdiAccount } from '@mdi/js'
+import { mdiHomeAccount, mdiChartBar, mdiInformationOutline, mdiAccount } from '@mdi/js'
 import { ref } from 'vue'
+import { useTheme } from 'vuetify'
+
 let drawer = ref(null)
+const darkTheme = ref(false)
+const theme = useTheme()
+
+const changeTheme = () => {
+  theme.global.name.value = darkTheme.value ? 'dark' : 'light'
+}
 </script>
 
 <!-- <script> -->
