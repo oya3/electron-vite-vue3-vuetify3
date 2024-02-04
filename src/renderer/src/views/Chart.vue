@@ -71,9 +71,15 @@ export default {
         scales: {
           x: {
             stacked: true,  // 積み上げの指定
+            grid: {
+              color: 'rgba(128, 128, 128, 0.5)',  // light, dark テーマ両方でグリッド線が見える色に変更
+            },
           },
           y: {
             stacked: true,  //  積み上げの指定
+            grid: {
+              color: 'rgba(128, 128, 128, 0.5)',  // light, dark テーマ両方でグリッド線が見える色に変更
+            },
           }
         },
         plugins: {
