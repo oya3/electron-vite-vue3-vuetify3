@@ -28,6 +28,7 @@
     v-model="drawer"
   >
     <v-list nav>
+      <!-- https://pictogrammers.com/library/mdi/icon/video-3d-variant/ -->
       <v-list-item title="Home" value="home" @click="$router.push({ path: '/' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiHomeAccount" />
@@ -36,6 +37,11 @@
       <v-list-item title="Chart" value="chart" @click="$router.push({ path: '/chart' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiChartBar" />
+        </template>
+      </v-list-item>
+      <v-list-item title="Model3D" value="model3d" @click="$router.push({ path: '/model3d' })">
+        <template v-slot:prepend>
+          <v-icon :icon="mdiVideo3dVariant" />
         </template>
       </v-list-item>
       <v-list-item title="About" value="about" @click="$router.push({ path: '/about' })">
@@ -57,7 +63,7 @@
 </template>
 
 <script setup>
-import { mdiHomeAccount, mdiChartBar, mdiInformationOutline, mdiWeatherNight, mdiWeatherSunny, mdiAccount } from '@mdi/js'
+import { mdiHomeAccount, mdiChartBar, mdiInformationOutline, mdiWeatherNight, mdiWeatherSunny, mdiVideo3dVariant, mdiAccount } from '@mdi/js'
 import { ref, provide } from 'vue'
 import { useTheme } from 'vuetify'
 
