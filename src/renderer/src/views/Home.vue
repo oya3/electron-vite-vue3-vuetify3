@@ -86,6 +86,8 @@ const nodes = reactive({
 const openFile = async () => {
   const filePath = await window.api.openFile()
   console.log(filePath)
+  // ついでにping(pong)発行(メインプロセスでpongログが出力される)
+  window.api.sendPing()
 };
 
 const darkTheme = inject('darkTheme')

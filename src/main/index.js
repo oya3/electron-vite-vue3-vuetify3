@@ -2,12 +2,28 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { promises as fs } from 'fs';
 
 async function handleFileOpen () {
   const { canceled, filePaths } = await dialog.showOpenDialog()
   if (!canceled) {
     return filePaths[0]
   }
+}
+
+// async function handleFilePath (event, filePath) {
+//   const isDevelopment = process.env.NODE_ENV !== 'production';
+//   const basePath = isDevelopment ? __dirname : join(process.resourcesPath, 'app.asar');
+//   return join(basePath, filePath);
+// }
+async function handleGetFileBody (event, filePath) {
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+  const basePath = isDevelopment ? __dirname : join(process.resourcesPath, 'app.asar');
+  const relativePath = isDevelopment ? `../renderer/${filePath}` : filePath;
+  const absolutePath = join(basePath, relativePath);
+  const data = await fs.readFile(absolutePath);
+  const uint8Array = new Uint8Array(data);
+  return uint8Array;
 }
 
 function createWindow() {
@@ -20,7 +36,8 @@ function createWindow() {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+      // webSecurity: false, // CORS 対応
     }
   })
 
@@ -40,6 +57,8 @@ function createWindow() {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+  // // 開発者ツールを強制的に開く
+  // mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
@@ -59,6 +78,7 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
   ipcMain.handle('dialog:openFile', handleFileOpen)
+  ipcMain.handle('getFileBody', handleGetFileBody)
 
   createWindow()
 

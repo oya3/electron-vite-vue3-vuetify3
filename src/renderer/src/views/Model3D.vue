@@ -4,7 +4,9 @@
 
 <script>
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { inject } from 'vue';
+// import modelpath from '/models/model.glb'
 
 export default {
   name: 'ThreeJsComponent',
@@ -25,7 +27,7 @@ export default {
       }
     }
   },
-  mounted() {
+  async mounted() {
     this.header_size = 64;  // header 分減算用
     // Three.jsのオブジェクトを直接インスタンスに追加
     this.scene = new THREE.Scene();
@@ -52,8 +54,8 @@ export default {
     this.scene.add(light);
 
     // グリッドヘルパーを作成
-    const size = 10;
-    const divisions = 10;
+    const size = 100;
+    const divisions = 50;
     const gridHelper = new THREE.GridHelper(size, divisions);
     this.scene.add(gridHelper);
 
@@ -73,7 +75,6 @@ export default {
     wireframeCube.position.y = 0.5;
     wireframeCube.position.x = 2.0;
     this.scene.add(wireframeCube);
-
     
     // キューブを作成
     const geometry = new THREE.SphereGeometry(1, 32, 32); // 球体のジオメトリに変更
@@ -90,19 +91,40 @@ export default {
     this.cube2.position.z = 2;
     this.scene.add(this.cube2);
 
+    // GLBファイルの読み込み
+    // import Versions from '@renderer/components/Versions.vue'
+    // loader.load(modelpath, (gltf) => {
+
+    // GLTFLoaderのインスタンスを作成
+    const loader = new GLTFLoader();
+    const glbFileBody = await window.api.getFileBody('/models/model.glb');
+    console.log("glbFileBody:" + glbFileBody);
+    // loader.load('/models/model.glb', (gltf) => {  // src/renderer/public/models/model.glb ファイルを読み込む
+    loader.parse(glbFileBody.buffer, '', (gltf) => {
+      this.scene.add(gltf.scene);
+    }, function(error) {
+      console.error(error);
+    });
+
     // カメラ位置
-    this.camera.position.z = 5;
-    this.camera.position.y = 3;
+    this.camerapos = new THREE.Vector3(0, 7, 0);
+    this.camerapos.offset = 7;
+    this.camerapos.z = this.camerapos.offset;
+    this.camera.position.x = this.camerapos.x;
+    this.camera.position.y = this.camerapos.y;
+    this.camera.position.z = this.camerapos.z;
+    // カメラターゲット
+    this.targetpos = new THREE.Vector3(0, 5, 0);
 
     const animate = () => {
       requestAnimationFrame(animate);
 
       // キューブの周りをカメラが回るようにする
       const elapsedTime = this.clock.getElapsedTime();
-      this.camera.position.x = Math.cos(elapsedTime * 0.1) * 5;
-      this.camera.position.z = Math.sin(elapsedTime * 0.1) * 5;
-      this.camera.lookAt(this.cube.position);
+      this.camera.position.x = Math.cos(elapsedTime * 0.1) * this.camerapos.offset;
+      this.camera.position.z = Math.sin(elapsedTime * 0.1) * this.camerapos.offset;
 
+      this.camera.lookAt(this.targetpos);
       this.renderer.render(this.scene, this.camera);
     };
 
