@@ -23,6 +23,9 @@ $ npm run dev
 ### Build
 
 ```bash
+# これやらないと、src/renderer/public の内容がコピーされない様子...
+$ npm run build
+
 # For windows
 $ npm run build:win
 
