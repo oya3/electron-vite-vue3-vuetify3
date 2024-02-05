@@ -14,7 +14,9 @@
           >
           <div style="width: 100%; height: 550px;"> 
             <v-row style="width: 100%; height: 100%;">
+              <v-btn @click="reset_chart01">reset</v-btn>
               <Bar
+                ref="chart01"
                 :options="chartOptions2"
                 :data="chartData2"
                 />
