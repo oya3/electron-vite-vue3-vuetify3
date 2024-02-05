@@ -97,9 +97,15 @@ export default {
 
     // GLTFLoaderのインスタンスを作成
     const loader = new GLTFLoader();
+    // // web(npm run dev開発)サーバから読み込み用。buildすると開発サーバ起動しないので使えない...
+    // loader.load('/models/model.glb', (gltf) => {  // src/renderer/public/models/model.glb ファイルを読み込む
+    //   const model = gltf.scene;
+    //   scene.value.add(model);
+    // }, undefined, function (error) {
+    //   console.error(error);
+    // });
     const glbFileBody = await window.api.getFileBody('/models/model.glb');
     console.log("glbFileBody:" + glbFileBody);
-    // loader.load('/models/model.glb', (gltf) => {  // src/renderer/public/models/model.glb ファイルを読み込む
     loader.parse(glbFileBody.buffer, '', (gltf) => {
       this.scene.add(gltf.scene);
     }, function(error) {
