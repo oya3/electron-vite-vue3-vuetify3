@@ -143,8 +143,9 @@ export default {
               10, 20,  5, 15, 50,
               10, 20,  5, 15, 50
             ],
-            // borderColor: '#36A2EB',
-            // backgroundColor: "red"
+            // backgroundColor 背景色 rgba(0, 0, 0, 0.1)
+            // borderColor ボーダの色 rgba(0, 0, 0, 0.1)
+            // 文字の色 #666
             backgroundColor: "rgba(18,63,166,0.8)",
           },
           {
