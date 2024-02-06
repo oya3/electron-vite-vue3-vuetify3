@@ -1,45 +1,54 @@
 <template>
   <br>
-  <div style="width: 100%; height: 100%;">  <!-- <v-container class="bg-surface-variant"> -->
+  <!-- <Pie -->
+  <!--   :options="chartOptionsPie" -->
+  <!--   :data="chartDataPie" -->
+  <!--   /> -->
+  <div style="min-width: 800px; width: 100%; height: 100%;">  <!-- <v-container class="bg-surface-variant"> -->
       <v-row style="width: 100%; height: 100%;">
         <v-col
           cols="2"
           >
-          <div :class="{'dark': darkTheme}">
+          <div :class="{'dark': darkTheme}" style="min-width: 200px;">
             <Tree :config="tree_config" :nodes="tree_nodes"></Tree>
           </div>
         </v-col>
         <v-col
           cols="10"
           >
-          <div style="width: 100%; height: 550px;"> 
-            <v-row style="width: 100%; height: 100%;">
-              <v-btn @click="reset_chart01">reset</v-btn>
+          <div style="width: 100%; max-height: 650px;"> 
+            <div style="width: 100%; height: 100%;">
+              <v-btn @click="reset_chart">reset</v-btn>
               <Bar
-                ref="chart01"
-                :options="chartOptions2"
-                :data="chartData2"
+                ref="chartBar"
+                :options="chartOptionsBar"
+                :data="chartDataBar"
                 />
+            </div>
+          </div>
+          <div style="width: 100%; height: 100%;"> 
+            <v-row style="width: 100%; height: 100%;">
+              <v-col
+                cols="6"
+                >
+                <div style="width: 50%; height: 50%; text-align: center;">
+                  <Pie
+                    :options="chartOptionsPie"
+                    :data="chartDataPie"
+                    />
+                </div>
+              </v-col>
+              <v-col
+                cols="6"
+                >
+                <Line
+                  ref="chartLine"
+                  :options="chartOptionsLine"
+                  :data="chartDataLine"
+                  />
+              </v-col>
             </v-row>
           </div>
-          <v-row style="width: 100%; height: 100%;">
-            <v-col
-              cols="6"
-              >
-              <Bar
-                :options="chartOptions"
-                :data="chartData"
-                />
-            </v-col>
-            <v-col
-              cols="6"
-              >
-              <Bar
-                :options="chartOptions"
-                :data="chartData"
-                />
-            </v-col>
-          </v-row>
         </v-col>
       </v-row>
   </div>
@@ -47,22 +56,25 @@
 
 <script>
 import Tree from 'vue3-treeview';
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+import { Bar, Line, Pie } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, PointElement, LineElement, ArcElement, CategoryScale, LinearScale } from 'chart.js'
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { inject } from 'vue';
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, zoomPlugin)
+ChartJS.register(Title, Tooltip, Legend, BarElement, PointElement, LineElement, ArcElement, CategoryScale, LinearScale, zoomPlugin)
 
 export default {
   name: 'BarChart',
   components: {
     Tree,
-    Bar
+    Bar,
+    Line,
+    Pie
   },
   methods: {
-    reset_chart01(){
-      this.$refs.chart01.chart.resetZoom()
+    reset_chart(){
+      this.$refs.chartBar.chart.resetZoom()
+      this.$refs.chartLine.chart.resetZoom()
       console.log("resest");
     },
   },
@@ -129,7 +141,8 @@ export default {
           children: [],
         },
       },
-      chartData2: {
+      // Bar
+      chartDataBar: {
         labels:  [
           "2000年", "2001年", "2002年", "2003年", "2004年",
           "2005年", "2006年", "2007年", "2008年", "2009年",
@@ -172,7 +185,7 @@ export default {
           }
         ]
       },
-      chartOptions2: {
+      chartOptionsBar: {
         responsive: true,
         scales: {
           x: {
@@ -221,7 +234,8 @@ export default {
           }
         }
       },
-      chartData: {
+      // Line
+      chartDataLine: {
         labels:  ["00時", "01時", "02時", "03時", "04時",
                   "05時", "06時", "07時", "08時", "09時",
                   "10時", "11時", "12時", "13時", "14時",
@@ -244,21 +258,22 @@ export default {
           }
         ]
       },
-      chartOptions: {
+      chartOptionsLine: {
         responsive: true,
-        scales: {
-          x: {
-            stacked: true,  // 積み上げの指定
-          },
-          y: {
-            stacked: true,  //  積み上げの指定
-          }
-        },
+        // maintainAspectRatio: false,
+        // scales: {
+        //   x: {
+        //     stacked: true,  // 積み上げの指定
+        //   },
+        //   y: {
+        //     stacked: true,  //  積み上げの指定
+        //   }
+        // },
         plugins: {
           title: {
             display: true,
             fontSize: 20,
-            text: "積上げ棒グラフ"
+            text: "線グラフ"
           },
           zoom: {
             pan: {
@@ -269,8 +284,8 @@ export default {
             },
             limits: {
               // axis limits
-              x: {min: 0, max: 200},
-              y: {min: 0, max: 200},
+              x: {min: 0, max: 100},
+              y: {min: 0, max: 100},
             },
             zoom: {
               wheel: {
@@ -285,6 +300,20 @@ export default {
             }
           }
         }
+      },
+      // Pie
+      chartDataPie: {
+        labels: ['ruby', 'C#', 'python', 'node'],
+        datasets: [
+          {
+            backgroundColor: ['#41B883', '#E46651', '#00D8FF', '#DD1B16'],
+            data: [40, 20, 80, 10]
+          }
+        ]
+      },
+      chartOptionsPie: {
+        responsive: true,
+        // maintainAspectRatio: false,
       }
     }
   }
