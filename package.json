@@ -25,6 +25,7 @@
     "three": "^0.161.0",
     "vue-chartjs": "^5.3.0",
     "vue-router": "^4.2.5",
+    "vue3-tree-vue": "^2.0.9",
     "vue3-treeview": "^0.4.2",
     "vuetify": "^3.5.1"
   },
