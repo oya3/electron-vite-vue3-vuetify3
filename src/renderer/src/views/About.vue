@@ -20,6 +20,24 @@
       </template>
     </Vue3TreeVue>
   </div>
+  <div>
+    <BaseTree class="mtl-tree" v-model="heTreeData" treeLine>
+      <template #default="{ node, stat }">
+        <OpenIcon
+          v-if="stat.children.length"
+          :open="stat.open"
+          class="mtl-mr"
+          @click.native="stat.open = !stat.open"
+          />
+        <input
+          class="mtl-checkbox mtl-mr"
+          type="checkbox"
+          v-model="stat.checked"
+          />
+        <span class="mtl-ml">{{ node.text }}</span>
+      </template>
+    </BaseTree>
+  </div>
 </template>
 
 <script>
@@ -29,10 +47,15 @@ import { mdiFolderOpen, mdiFolder } from '@mdi/js'
 import Vue3TreeVue from 'vue3-tree-vue'
 import 'vue3-tree-vue/dist/style.css';
 
+import { BaseTree, Draggable, pro, OpenIcon } from '@he-tree/vue'
+import '@he-tree/vue/style/default.css'
+import '@he-tree/vue/style/material-design.css'
+
 export default {
   components: {
     Versions,
-    Vue3TreeVue
+    Vue3TreeVue,
+    BaseTree, Draggable, OpenIcon
   },
   data() {
     return {
@@ -75,6 +98,42 @@ export default {
             }
           ]
         }
+      ],
+      heTreeData: [
+        {
+          text: 'Projects',
+          children: [
+            {
+              text: 'Frontend',
+              children: [
+                {
+                  text: 'Vue',
+                  children: [
+                    {
+                      text: 'Nuxt',
+                    },
+                  ],
+                },
+                {
+                  text: 'React',
+                  children: [
+                    {
+                      text: 'Next',
+                    },
+                  ],
+                },
+                {
+                  text: 'Angular',
+                },
+              ],
+            },
+            {
+              text: 'Backend',
+            },
+          ],
+        },
+        { text: 'Photos' },
+        { text: 'Videos' },
       ],
     }
   }
