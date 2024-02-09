@@ -51,7 +51,6 @@
           </div>
           <div style="width: 100%; max-height: 650px;"> 
             <div style="width: 100%; height: 100%;">
-              <v-btn @click="reset_chart">reset</v-btn>
               <Line
                 ref="chartCombinedBar"
                 :options="chartOptionsCombinedLineBar"
@@ -61,13 +60,6 @@
           </div>
         </v-col>
       </v-row>
-      <!-- <div> -->
-      <!--   <Line -->
-      <!--     ref="chartCombinedLine" -->
-      <!--     :options="chartOptionsCombinedLine" -->
-      <!--     :data="chartDataCombinedLine" -->
-      <!--     /> -->
-      <!-- </div> -->
   </div>
 </template>
 
@@ -92,6 +84,7 @@ export default {
     reset_chart(){
       this.$refs.chartBar.chart.resetZoom()
       this.$refs.chartLine.chart.resetZoom()
+      this.$refs.chartCombinedBar.chart.resetZoom()
       console.log("resest");
     },
   },
@@ -261,17 +254,20 @@ export default {
           {
             label: "系列Ａ",
             data: [10, 20,  5, 15, 50, 10, 20,  5, 15, 50, 10, 20,  5, 15, 50, 10, 20,  5, 15, 50],
-            backgroundColor: "red"
+            backgroundColor: "red",
+            borderColor: "rgba(140, 140, 140, 0.8)"
           },
           {
             label: "系列Ｂ",
             data: [ 5, 10, 10,  5,  8, 10, 20,  5, 15, 50,  5, 10, 10,  5,  8, 10, 20,  5, 15, 50],
-            backgroundColor: "blue"
+            backgroundColor: "blue",
+            borderColor: "rgba(140, 140, 140, 0.8)"
           },
           {
             label: "系列C",
             data: [ 15, 20, 20,  15,  18, 10, 20,  5, 15, 50,  15, 20, 20,  15,  18, 10, 20,  5, 15, 50],
-            backgroundColor: "green"
+            backgroundColor: "green",
+            borderColor: "rgba(140, 140, 140, 0.8)"
           }
         ]
       },
@@ -355,7 +351,6 @@ export default {
             backgroundColor: "rgba(18,63,166,0.8)",
             stack: 'combined',
             type: 'bar'
-
           },
           {
             label: "系列Ｂ",
@@ -390,6 +385,7 @@ export default {
               110, 111, 110, 114, 10,
             ],
             backgroundColor: "rgba(200,200,200,0.8)",
+            borderColor: "rgba(120, 120, 120, 0.8)",
             stack: 'combined',
           }
         ]
