@@ -73,7 +73,7 @@ import { inject } from 'vue';
 ChartJS.register(Title, Tooltip, Legend, BarElement, PointElement, LineElement, ArcElement, CategoryScale, LinearScale, zoomPlugin)
 
 export default {
-  name: 'BarChart',
+  name: 'Chart',
   components: {
     Tree,
     Bar,

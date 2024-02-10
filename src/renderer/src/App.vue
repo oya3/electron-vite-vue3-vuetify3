@@ -29,12 +29,18 @@
   >
     <v-list nav>
       <!-- https://pictogrammers.com/library/mdi/icon/video-3d-variant/ -->
+      <!-- valueを同値にすると選択カラーが設定されてしまう -->
       <v-list-item title="Home" value="home" @click="$router.push({ path: '/' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiHomeAccount" />
         </template>
       </v-list-item>
       <v-list-item title="Chart" value="chart" @click="$router.push({ path: '/chart' })">
+        <template v-slot:prepend>
+          <v-icon :icon="mdiChartBar" />
+        </template>
+      </v-list-item>
+      <v-list-item title="Chart2" value="chart2" @click="$router.push({ path: '/chart2' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiChartBar" />
         </template>
