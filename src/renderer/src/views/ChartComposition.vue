@@ -7,6 +7,17 @@
       >
       <div :class="{'dark': darkTheme}" style="min-width: 200px;">
         <Tree :config="tree_config" :nodes="tree_nodes"></Tree>
+        <BaseTree class="mtl-tree" v-model="heTreeData" treeLine :defaultOpen="false">
+          <template #default="{ node, stat }">
+            <v-icon
+              v-if="stat.children.length"
+              @click.native="stat.open = !stat.open"
+              >
+              {{ stat.open ? mdiFolderOpen : mdiFolder }}
+            </v-icon>
+            <span class="mtl-ml">{{ node.text }}</span>
+          </template>
+        </BaseTree>
       </div>
     </v-col>
     <v-col
@@ -28,7 +39,9 @@
 </template>
 
 <script setup>
-import Tree from 'vue3-treeview';
+import {mdiFolderOpen, mdiFolder} from '@mdi/js';
+import {BaseTree} from '@he-tree/vue';
+import '@he-tree/vue/style/default.css';
 import {Line} from 'vue-chartjs';
 import {
   Chart as ChartJS, Title, Tooltip, Legend, BarElement,
@@ -54,42 +67,40 @@ watch(darkTheme, (newValue) => {
   console.log('darkTheme.value:', newValue);
 }, {immediate: true}); // trueの場合、初期化時にも呼ばれる。falseの場合、変更後に呼ばれる
 
-const tree_config = ref({
-  roots: ['id1', 'id2'], // 第一階層のkey
-  checkboxes: true, // チェックボックスあり
-  checkMode: 0, // 親階層をチェックした際に子階層もチェックする
-  padding: 22,
-});
-
-const tree_nodes = ref({
-  id1: {
-    text: '階層1',
-    children: ['id11', 'id12'],
-    state: {
-      opened: true, // デフォルトで開く
-    },
+const heTreeData = ref([
+  {
+    text: 'Projects',
+    children: [
+      {
+        text: 'Frontend',
+        children: [
+          {
+            text: 'Vue',
+            children: [
+              {
+                text: 'Nuxt',
+              },
+            ],
+          },
+          {
+            text: 'React',
+            children: [
+              {
+                text: 'Next',
+              },
+            ],
+          },
+          {
+            text: 'Angular',
+          },
+        ],
+      },
+      {
+        text: 'Backend',
+      },
+    ],
   },
-  id11: {
-    text: '階層1-1',
-    children: [],
-  },
-  id12: {
-    text: '階層1-2',
-    children: [],
-  },
-  id2: {
-    text: '階層2',
-    children: ['id21'],
-  },
-  id21: {
-    text: '階層2-1',
-    children: ['id211'],
-  },
-  id211: {
-    text: '階層2-1-1',
-    children: [],
-  },
-});
+]);
 
 // CombinedLineBar
 const chartDataCombinedLineBar = ref({
