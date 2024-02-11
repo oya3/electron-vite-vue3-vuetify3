@@ -31,6 +31,11 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
+    // // タイトルバーを非表示にする
+    // // - https://qiita.com/nyanchu/items/9a1c910bbca55e9d2f3c
+    // // - https://qiita.com/Yarnaguchi/items/f174a80a0e2bc4b1f619
+    // transparent: true,
+    // frame: false,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
