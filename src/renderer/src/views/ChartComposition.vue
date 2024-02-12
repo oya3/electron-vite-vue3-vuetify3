@@ -6,12 +6,16 @@
       cols="2"
       >
       <div :class="{'dark': darkTheme}" style="min-width: 200px;">
-        <Tree :config="tree_config" :nodes="tree_nodes"></Tree>
         <BaseTree class="mtl-tree" v-model="heTreeData" treeLine :defaultOpen="false">
           <template #default="{ node, stat }">
+            <input
+              class="mtl-checkbox mtl-mr"
+              type="checkbox"
+              v-model="stat.checked"
+              />
             <v-icon
               v-if="stat.children.length"
-              @click.native="stat.open = !stat.open"
+              @click="stat.open = !stat.open"
               >
               {{ stat.open ? mdiFolderOpen : mdiFolder }}
             </v-icon>
@@ -25,7 +29,7 @@
       >
       <div style="width: 100%; max-height: 650px;">
         <div style="width: 100%; height: 100%;">
-          <v-btn @click="reset_chart">reset</v-btn>
+          <v-btn @click="resetChart">reset</v-btn>
           <Line
             ref="chartCombinedBar"
             :options="chartOptionsCombinedLineBar"
@@ -39,33 +43,46 @@
 </template>
 
 <script setup>
-import {mdiFolderOpen, mdiFolder} from '@mdi/js';
-import {BaseTree} from '@he-tree/vue';
+import { mdiFolderOpen, mdiFolder } from '@mdi/js';
+import { BaseTree } from '@he-tree/vue';
 import '@he-tree/vue/style/default.css';
-import {Line} from 'vue-chartjs';
+import '@he-tree/vue/style/material-design.css';
+import { Line } from 'vue-chartjs';
 import {
   Chart as ChartJS, Title, Tooltip, Legend, BarElement,
   PointElement, LineElement, ArcElement, CategoryScale,
   LinearScale,
 } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import {inject, ref, watch} from 'vue';
+import { inject, ref, watch } from 'vue';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, PointElement, LineElement, ArcElement, CategoryScale, LinearScale, zoomPlugin);
 
 const name = 'ChartComposition';
-
 const chartCombinedBar = ref(null); // ref 用
 const darkTheme = inject('darkTheme');
 
-const reset_chart = () => {
+// @click.native="stat.open = !stat.open" の .native は vue3.x では非推奨
+// Vue.jsのコンポーネントが「自身でイベントを発行する」とは、そのコンポーネントが特定のアクション（例えばクリック）に反応して、
+// それを親コンポーネントに伝えることを意味します。
+// たとえば、あるボタンコンポーネントがあり、そのボタンがクリックされたときに何かを実行したいとします。その場合、ボタンコンポーネントは
+// クリックイベントを「自身で発行」します。これは、ボタンコンポーネントがthis.$emit('click')を実行することで行われます。
+// そして、親コンポーネントはその発行されたイベントをリッスン（聞く）して、イベントが発生したときに何かを実行します。
+// これは、親コンポーネントが@click="doSomething"のように記述することで行われます。
+// したがって、コンポーネントが「自身でクリックイベントを発行しない」場合とは、そのコンポーネントがクリックされたときに
+// this.$emit('click')を実行しない、つまり親コンポーネントにクリックされたことを伝えない場合を指します。
+// このような場合でも、Vue.js 2.xの時代には.native修飾子を使うことで、コンポーネントのルート要素がクリックされたときに
+// 親コンポーネントで何かを実行することができました。しかし、Vue.js 3.0以降では、この.native修飾子は非推奨となり、代わりに
+// コンポーネントが自身のクリックイベントを発行するようになりました。
+
+const resetChart = () => {
   chartCombinedBar.value.chart.resetZoom();
   console.log('reset');
 };
 
 watch(darkTheme, (newValue) => {
   console.log('darkTheme.value:', newValue);
-}, {immediate: true}); // trueの場合、初期化時にも呼ばれる。falseの場合、変更後に呼ばれる
+}, { immediate: true }); // trueの場合、初期化時にも呼ばれる。falseの場合、変更後に呼ばれる
 
 const heTreeData = ref([
   {
@@ -189,8 +206,8 @@ const chartOptionsCombinedLineBar = ref({
         enabled: true, // パンを有効にする
       },
       limits: {
-        x: {min: 0, max: 200},
-        y: {min: 0, max: 200},
+        x: { min: 0, max: 200 },
+        y: { min: 0, max: 200 },
       },
       zoom: {
         wheel: {
