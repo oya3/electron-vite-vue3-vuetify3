@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import 'vuetify/styles';  // vuetifyパレットカラーを利用するためにはGlobal CSSの”vuetify/styles”のimportが必要
+import 'vuetify/styles'; // vuetifyパレットカラーを利用するためにはGlobal CSSの”vuetify/styles”のimportが必要
 // import './assets/main.css'
 import { createVuetify } from 'vuetify';
 import { aliases, mdi } from 'vuetify/iconsets/mdi-svg';
@@ -14,7 +14,7 @@ const vuetify = createVuetify({
     themes: {
       light: {
         colors: {
-          'titlebar': '#1976D2', // ライトモードのときのprimary色
+          titlebar: '#1976D2', // ライトモードのときのprimary色
         }
       },
       dark: {
