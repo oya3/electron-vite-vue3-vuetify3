@@ -1,5 +1,5 @@
 <template>
-  <div ref="mount" style="width: 100%; height: 100%;"/>
+  <div ref="mount" style="width: 100%; height: 100%;" @click="clickPosition"/>
 </template>
 
 <script>
@@ -20,15 +20,15 @@ export default {
     darkTheme: {
       immediate: true,
       handler(newValue) {
-        if(this.renderer){  // renderer が生成されてないと背景色を設定できない
+        if (this.renderer) { // renderer が生成されてないと背景色を設定できない
           this.setClearColor();
         }
         console.log('darkTheme.value:', newValue);
-      }
-    }
+      },
+    },
   },
   async mounted() {
-    this.header_size = 64;  // header 分減算用
+    this.header_size = 64; // header 分減算用
     // Three.jsのオブジェクトを直接インスタンスに追加
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight - this.header_size), 0.1, 1000);
@@ -67,7 +67,7 @@ export default {
     cube3.position.y = 0.5;
     cube3.position.x = 2.0;
     this.scene.add(cube3);
-    
+
     // キューブを作成（ワイヤーフレーム用）
     const wireframeGeometry = new THREE.BoxGeometry(1, 1, 1);
     const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0x404040, wireframe: true }); // 黒色のワイヤーフレーム
@@ -75,7 +75,7 @@ export default {
     wireframeCube.position.y = 0.5;
     wireframeCube.position.x = 2.0;
     this.scene.add(wireframeCube);
-    
+
     // キューブを作成
     const geometry = new THREE.SphereGeometry(1, 32, 32); // 球体のジオメトリに変更
     const material = new THREE.MeshPhysicalMaterial({ color: 0x8080f0 }); // wireframe
@@ -139,7 +139,7 @@ export default {
     // リサイズイベントのリスナーを追加
     window.addEventListener('resize', this.onWindowResize, false);
   },
-  beforeDestroy() {
+  beforeDestroy () {
     // コンポーネントが破棄される前にリスナーを削除
     window.removeEventListener('resize', this.onWindowResize);
   },
@@ -147,7 +147,7 @@ export default {
     /*
     onWindowResize() {
       // レンダラーとカメラのサイズを更新
-      this.$nextTick(() => {  
+      this.$nextTick(() => {
         // FIXME: 次の描画タイミングで mount.clientWidth mount.clientHeight を参照しても正しく反映されない。。。
         //        仕方がないから windowサイズで更新しているが、headerサイズ分マイナスして計算
         if (this.$refs.mount) {
@@ -160,6 +160,30 @@ export default {
       })
     },
     */
+    clickPosition( event ) {
+      const rect = event.target.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      // var x = event.clientX;
+      // var y = event.clientY;
+
+      const mouse = new THREE.Vector2();
+      mouse.x = ( x / window.innerWidth ) * 2 - 1;
+      mouse.y = -( y / window.innerHeight ) * 2 + 1;
+
+      // Raycasterインスタンス作成
+      const raycaster = new THREE.Raycaster();
+      // 取得したX、Y座標でrayの位置を更新
+      // cameraは作成済みのThree.jsのカメラ
+      raycaster.setFromCamera( mouse, this.camera );
+      // オブジェクトの取得
+      // sceneは作成済みのThree.jsのシーン
+      const intersects = raycaster.intersectObjects( this.scene.children );
+      // WEBコンソールにオブジェクト上の座標を出力
+      console.log( 'x座標=%f', intersects[0].point.x );
+      console.log( 'y座標=%f', intersects[0].point.y );
+      console.log( 'z座標=%f', intersects[0].point.z );
+    },
     onWindowResize() {
       // ブラウザウィンドウがリサイズされたときにレンダラーとカメラのサイズを更新
       this.camera.aspect = window.innerWidth / (window.innerHeight - this.header_size);
@@ -167,10 +191,9 @@ export default {
       this.renderer.setSize(window.innerWidth, (window.innerHeight - this.header_size));
     },
     setClearColor() {
-      if(this.darkTheme){
+      if (this.darkTheme) {
         this.renderer.setClearColor(0x404040); // 暗い灰色に設定
-      }
-      else{
+      } else {
         this.renderer.setClearColor(0xf0f0f0); // 明るい灰色に設定
       }
     },
