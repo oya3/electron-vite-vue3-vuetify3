@@ -50,6 +50,11 @@
           <v-icon :icon="mdiVideo3dVariant" />
         </template>
       </v-list-item>
+      <v-list-item title="Model3D2" value="model3d2" @click="$router.push({ path: '/model3d2' })">
+        <template v-slot:prepend>
+          <v-icon :icon="mdiVideo3dVariant" />
+        </template>
+      </v-list-item>
       <v-list-item title="About" value="about" @click="$router.push({ path: '/about' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiInformationOutline" />

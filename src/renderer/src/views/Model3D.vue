@@ -9,7 +9,7 @@ import { inject } from 'vue';
 // import modelpath from '/models/model.glb'
 
 export default {
-  name: 'ThreeJsComponent',
+  name: 'Model3D',
   data() {
     return {
       // Three.jsのオブジェクトはここでは初期化しない

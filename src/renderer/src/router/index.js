@@ -5,33 +5,38 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
   },
   {
     path: '/chart',
     name: 'Chart',
-    component: () => import('../views/Chart.vue')
+    component: () => import('../views/Chart.vue'),
   },
   {
     path: '/chart2',
     name: 'Chart2',
-    component: () => import('../views/ChartComposition.vue')
+    component: () => import('../views/ChartComposition.vue'),
   },
   {
     path: '/model3d',
     name: 'Model3D',
-    component: () => import('../views/Model3D.vue')
+    component: () => import('../views/Model3D.vue'),
+  },
+  {
+    path: '/model3d2',
+    name: 'Model3D2',
+    component: () => import('../views/Model3DComposition.vue'),
   },
   {
     path: '/about',
     name: 'About',
-    component: () => import('../views/About.vue')
-  }
+    component: () => import('../views/About.vue'),
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes
+  routes,
 });
 
 export default router;
