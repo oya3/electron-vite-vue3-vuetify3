@@ -19,7 +19,12 @@
               >
               {{ stat.open ? mdiFolderOpen : mdiFolder }}
             </v-icon>
-            <span class="mtl-ml">{{ node.text }}</span>
+            <span
+              class="mtl-ml"
+              @click="stat.open = !stat.open"
+              >
+              {{ node.text }}
+            </span>
           </template>
         </BaseTree>
       </div>
