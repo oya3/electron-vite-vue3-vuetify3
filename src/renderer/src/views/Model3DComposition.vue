@@ -1,5 +1,10 @@
 <template>
-  <div ref="mount" style="width: 100%; height: 100%; position: relative;" @click="clickPosition"/>
+  <div ref="mount" style="width: 100%; height: 100%; position: relative;" @click="clickPosition"
+       >
+    <div style="width: 100%; height: 100%; position: absolute; top: 0px; z-index: 9999;">
+      <v-chip ref="point1">vchip1</v-chip>
+    </div>
+  </div>
 </template>
 
 <script setup>
@@ -11,6 +16,7 @@ import { inject, ref, watch, onMounted, nextTick } from 'vue';
 const name = 'Model3DComposition';
 const darkTheme = inject('darkTheme');
 const mount = ref(null); // this.$refs.mount.appendChild(this.renderer.domElement);
+const point1 = ref(null);
 
 let headerSize = null; // header 分減算用
 let scene = null; // new THREE.Scene();
@@ -122,7 +128,7 @@ onMounted( async () => {
   // カメラターゲット
   targetpos = new THREE.Vector3(0, 5, 0);
 
-  // 2D パネル作成
+  // css2D レンダーラー作成
   // https://sbcode.net/threejs/glasses/
   css2drenderer = new CSS2DRenderer()
   // css2drenderer.setSize(window.innerWidth, window.innerHeight)
@@ -137,7 +143,8 @@ onMounted( async () => {
 
   const div = document.createElement('div');
   div.textContent = '●';
-  div.style.color = 'black';
+  div.color="primary"; // vuetify colorに従う
+  // div.style.color = 'black';
   label2d = new CSS2DObject(div);
   label2d.position.set(-2.093, 8.291, 2.110);
   scene.add(label2d);
@@ -150,6 +157,15 @@ onMounted( async () => {
   canvas2d.width = rect.width;
   canvas2d.height = rect.height;
   mount.value.appendChild(canvas2d);
+
+  // // vue パネル
+  // vuePanel = document.createElement('div');
+  // vuePanel.style.position = 'absolute';
+  // vuePanel.style.top = '0px'
+  // vuePanel.style.pointerEvents = 'none'
+  // vuePanel.width = rect.width;
+  // vuePanel.height = rect.height;
+  // mount.value.appendChild(vuePanel);
 
   // const geometryLine = new THREE.Geometry();
   // geometryLine.vertices.push(new THREE.Vector3(10, 20, 0));
@@ -202,6 +218,12 @@ onMounted( async () => {
     // 2Dコンテキストを取得
     const ctx = canvas2d.getContext('2d');
     ctx.clearRect(0, 0, canvas2d.width, canvas2d.height);
+
+    // v-chip要素の背景色の取得
+    const vc = document.querySelector('.v-chip__underlay'); // 無理やりだが vuetify カラーに従う
+    const bgColor = window.getComputedStyle(vc).backgroundColor;
+    // 線の色をv-chipの背景色に設定
+    ctx.strokeStyle = bgColor;
     // 線を描く
     ctx.beginPath(); // 新しいパスを開始
     ctx.moveTo(0, 0); // パスの開始点を移動
@@ -259,7 +281,7 @@ const onWindowResize = () => {
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
     css2drenderer.setSize(width, height);
-    console.log(`${x}:${y},${width}:${height}`);
+    // console.log(`${x}:${y},${width}:${height}`);
   }
 };
 
