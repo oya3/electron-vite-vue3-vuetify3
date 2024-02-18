@@ -1,8 +1,12 @@
 <template>
   <div ref="mount" style="width: 100%; height: 100%; position: relative;" @click="clickPosition"
        >
-    <div style="width: 100%; height: 100%; position: absolute; top: 0px; z-index: 9999;">
-      <v-chip ref="point1">vchip1</v-chip>
+    <!-- 線描画用キャンバス -->
+    <canvas ref="canvas2d" style="width: 100%; height: 100%; position: absolute; top: 0px; z-index: 10;"/>
+    <!-- vuetify部品用タグ -->
+    <div style="width: 100%; height: 100%; position: absolute; top: 0px; z-index: 20;">
+      <v-btn ref="point1" size="x-small" @click="pointClick">point1</v-btn>
+      <v-btn ref="point2" size="x-small" @click="pointClick">point2</v-btn>
     </div>
   </div>
 </template>
@@ -15,8 +19,12 @@ import { inject, ref, watch, onMounted, nextTick } from 'vue';
 
 const name = 'Model3DComposition';
 const darkTheme = inject('darkTheme');
+const vuetify = inject('vuetify');
+
 const mount = ref(null); // this.$refs.mount.appendChild(this.renderer.domElement);
 const point1 = ref(null);
+const point2 = ref(null);
+const canvas2d = ref(null);
 
 let headerSize = null; // header 分減算用
 let scene = null; // new THREE.Scene();
@@ -29,7 +37,8 @@ let camerapos = null; // new THREE.Vector3(0, 7, 0);
 let targetpos = null; // new THREE.Vector3(0, 5, 0);
 let css2drenderer = null; // new CSS2DRenderer();
 let label2d = null;
-let canvas2d = null;
+let lineSwitch = null; // false;
+let lineStartPosition = null;
 
 // テーマ変化通知
 watch(darkTheme, (newValue) => {
@@ -43,6 +52,7 @@ watch(darkTheme, (newValue) => {
 onMounted( async () => {
   await nextTick(); // Vueのレンダリングが完了するのを待つ
   const rect = mount.value.getBoundingClientRect(); // div要素のサイズと位置を取得
+  lineSwitch = false;
   headerSize = 64; // header 分減算用
   // Three.jsのオブジェクトを直接インスタンスに追加
   scene = new THREE.Scene();
@@ -150,13 +160,14 @@ onMounted( async () => {
   scene.add(label2d);
 
   // 2D canvasパネル
-  canvas2d = document.createElement('canvas');
-  canvas2d.style.position = 'absolute';
-  canvas2d.style.top = '0px'
-  canvas2d.style.pointerEvents = 'none'
-  canvas2d.width = rect.width;
-  canvas2d.height = rect.height;
-  mount.value.appendChild(canvas2d);
+  // canvas2d = document.createElement('canvas');
+  // canvas2d.style.position = 'absolute';
+  // canvas2d.style.top = '0px';
+  // canvas2d.style.pointerEvents = 'none';
+  // canvas2d.style.zIndex = '1';
+  // canvas2d.width = rect.width;
+  // canvas2d.height = rect.height;
+  // mount.value.appendChild(canvas2d);
 
   // // vue パネル
   // vuePanel = document.createElement('div');
@@ -206,7 +217,6 @@ onMounted( async () => {
     renderer.render(scene, camera);
     css2drenderer.render(scene, camera);
 
-
     // 3Dオブジェクトのワールド座標を取得する
     const worldPosition = label2d.getWorldPosition(new THREE.Vector3());
     // スクリーン座標を取得する
@@ -216,19 +226,25 @@ onMounted( async () => {
     const sy = (rect.height / 2) * (-projection.y + 1.0);
 
     // 2Dコンテキストを取得
-    const ctx = canvas2d.getContext('2d');
-    ctx.clearRect(0, 0, canvas2d.width, canvas2d.height);
+    const ctx = canvas2d.value.getContext('2d');
+    ctx.clearRect(0, 0, canvas2d.value.width, canvas2d.value.height);
 
     // v-chip要素の背景色の取得
-    const vc = document.querySelector('.v-chip__underlay'); // 無理やりだが vuetify カラーに従う
-    const bgColor = window.getComputedStyle(vc).backgroundColor;
-    // 線の色をv-chipの背景色に設定
-    ctx.strokeStyle = bgColor;
-    // 線を描く
-    ctx.beginPath(); // 新しいパスを開始
-    ctx.moveTo(0, 0); // パスの開始点を移動
-    ctx.lineTo(sx, sy); // 線を描く
-    ctx.stroke(); // パスを描画
+    if ( true == lineSwitch ) {
+      const colors = vuetify.theme.current.value.colors;
+      // const variables = vuetify.theme.current.value.variables;
+      // const vc = document.querySelector('.v-chip__underlay'); // 無理やりだが vuetify カラーに従う
+      // const bgColor = window.getComputedStyle(vc).backgroundColor;
+      // 線の色をv-chipの背景色に設定
+      // ctx.strokeStyle = bgColor;
+      ctx.strokeStyle = colors['on-background']; //  'rgba(214, 214, 214, 1)'; // 赤色
+      ctx.lineWidth = 1;
+      // 線を描く
+      ctx.beginPath(); // 新しいパスを開始
+      ctx.moveTo(lineStartPosition.x, lineStartPosition.y); // パスの開始点を移動
+      ctx.lineTo(sx, sy); // 線を描く
+      ctx.stroke(); // パスを描画
+    }
 
     // const left = label2d.element.style.left;
     // const top = label2d.element.style.top;
@@ -271,8 +287,8 @@ const onWindowResize = () => {
   // リサイズされたときにレンダラーとカメラのサイズを更新
   if (mount.value) {
     const rect = mount.value.getBoundingClientRect();
-    canvas2d.width = rect.width;
-    canvas2d.height = rect.height;
+    canvas2d.value.width = rect.width;
+    canvas2d.value.height = rect.height;
     const x = rect.left;
     const y = rect.top;
     const width = mount.value.offsetWidth;
@@ -292,4 +308,16 @@ const setClearColor = () => {
     renderer.setClearColor(0xf0f0f0); // 明るい灰色に設定
   }
 };
+
+const pointClick = (event) => {
+  if (mount.value) {
+    const rect = mount.value.getBoundingClientRect();
+    const x = event.clientX - rect.left; // div要素内でのx座標
+    const y = event.clientY - rect.top; // div要素内でのy座標
+    lineSwitch = true;
+    lineStartPosition = { 'x': x, 'y': y };
+  }
+};
+
 </script>
+

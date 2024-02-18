@@ -1,4 +1,4 @@
-import { createApp } from 'vue';
+import { createApp, provide } from 'vue';
 import App from './App.vue';
 import 'vuetify/styles'; // vuetifyパレットカラーを利用するためにはGlobal CSSの”vuetify/styles”のimportが必要
 // import './assets/main.css'
@@ -15,12 +15,14 @@ const vuetify = createVuetify({
       light: {
         colors: {
           titlebar: '#1976D2', // ライトモードのときのprimary色
-        }
+          backpanel: 'rgba(214, 0, 0, 1)',
+        },
       },
       dark: {
         colors: {
           titlebar: '#808080', // ダークモードのときのprimary色
-        }
+          backpanel: 'rgba(214, 0, 0, 1)',
+        },
       },
       custom: {
         // dark: false,
@@ -35,7 +37,7 @@ const vuetify = createVuetify({
           info: '#2196F3',
           success: '#4CAF50',
           warning: '#FB8C00',
-        }
+        },
       },
     },
   },
@@ -44,7 +46,10 @@ const vuetify = createVuetify({
     aliases,
     sets: {
       mdi,
-    }
-  }
+    },
+  },
 });
-createApp(App).use(vuetify).use(router).mount('#app');
+// createApp(App).use(vuetify).use(router).mount('#app');
+const app = createApp(App);
+app.provide('vuetify', vuetify);
+app.use(vuetify).use(router).mount('#app');
