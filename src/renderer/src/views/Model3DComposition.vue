@@ -21,7 +21,7 @@ let cube2 = null;
 let clock = null; // new THREE.Clock();
 let camerapos = null; // new THREE.Vector3(0, 7, 0);
 let targetpos = null; // new THREE.Vector3(0, 5, 0);
-let labelRenderer = null; // new CSS2DRenderer();
+let css2drenderer = null; // new CSS2DRenderer();
 let label2d = null;
 let canvas2d = null;
 
@@ -32,7 +32,6 @@ watch(darkTheme, (newValue) => {
   }
   console.log('darkTheme.value:', newValue);
 }, { immediate: true }); // trueの場合、初期化時にも呼ばれる。falseの場合、変更後に呼ばれる
-
 
 // 起動時
 onMounted( async () => {
@@ -59,7 +58,6 @@ onMounted( async () => {
   // レンダラーの背景色を設定
   setClearColor()
   // renderer.setClearColor(0xf0f0f0); // 明るい灰色に設定
-
 
   // 光源を作成
   const light = new THREE.DirectionalLight(0xf0f080, 7);
@@ -126,16 +124,16 @@ onMounted( async () => {
 
   // 2D パネル作成
   // https://sbcode.net/threejs/glasses/
-  labelRenderer = new CSS2DRenderer()
-  // labelRenderer.setSize(window.innerWidth, window.innerHeight)
-  labelRenderer.setSize(rect.width, rect.height);
-  // labelRenderer.domElement.style.position = 'absolute'
-  // labelRenderer.domElement.style.top = '64px'
-  labelRenderer.domElement.style.position = 'absolute';
-  labelRenderer.domElement.style.top = '0px'
-  labelRenderer.domElement.style.pointerEvents = 'none'
-  // document.body.appendChild(labelRenderer.domElement)
-  mount.value.appendChild(labelRenderer.domElement);
+  css2drenderer = new CSS2DRenderer()
+  // css2drenderer.setSize(window.innerWidth, window.innerHeight)
+  css2drenderer.setSize(rect.width, rect.height);
+  // css2drenderer.domElement.style.position = 'absolute'
+  // css2drenderer.domElement.style.top = '64px'
+  css2drenderer.domElement.style.position = 'absolute';
+  css2drenderer.domElement.style.top = '0px'
+  css2drenderer.domElement.style.pointerEvents = 'none'
+  // document.body.appendChild(css2drenderer.domElement)
+  mount.value.appendChild(css2drenderer.domElement); // mount.value が親要素となる。mount.value(div)タグには relative 指定してある
 
   const div = document.createElement('div');
   div.textContent = '●';
@@ -190,7 +188,7 @@ onMounted( async () => {
     // camera.position.z = 0;
     camera.lookAt(targetpos);
     renderer.render(scene, camera);
-    labelRenderer.render(scene, camera);
+    css2drenderer.render(scene, camera);
 
 
     // 3Dオブジェクトのワールド座標を取得する
@@ -218,7 +216,11 @@ onMounted( async () => {
   animate();
 
   // リサイズイベントのリスナーを追加
-  window.addEventListener('resize', onWindowResize, false);
+  // window.addEventListener('resize', onWindowResize, false);
+  const ro = new ResizeObserver(() => {
+    onWindowResize();
+  });
+  ro.observe(mount.value);
 });
 
 const clickPosition = (event) => {
@@ -244,7 +246,7 @@ const clickPosition = (event) => {
 };
 
 const onWindowResize = () => {
-  // ブラウザウィンドウがリサイズされたときにレンダラーとカメラのサイズを更新
+  // リサイズされたときにレンダラーとカメラのサイズを更新
   if (mount.value) {
     const rect = mount.value.getBoundingClientRect();
     canvas2d.width = rect.width;
@@ -256,7 +258,7 @@ const onWindowResize = () => {
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
     renderer.setSize(width, height);
-    labelRenderer.setSize(width, height);
+    css2drenderer.setSize(width, height);
     console.log(`${x}:${y},${width}:${height}`);
   }
 };
