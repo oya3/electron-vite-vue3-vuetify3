@@ -5,8 +5,8 @@
     <canvas ref="canvas2d" style="width: 100%; height: 100%; position: absolute; top: 0px; z-index: 10;"/>
     <!-- vuetify部品用タグ -->
     <div style="width: 100%; height: 100%; position: absolute; top: 0px; z-index: 20;">
-      <v-btn ref="point1" size="x-small" @click="pointClick">point1</v-btn>
-      <v-btn ref="point2" size="x-small" @click="pointClick">point2</v-btn>
+      <v-btn ref="point1" size="x-small" @click="event => pointClick(event,0)">point1</v-btn>
+      <v-btn ref="point2" size="x-small" @click="event => pointClick(event,1)">point2</v-btn>
     </div>
   </div>
 </template>
@@ -36,9 +36,15 @@ let clock = null; // new THREE.Clock();
 let camerapos = null; // new THREE.Vector3(0, 7, 0);
 let targetpos = null; // new THREE.Vector3(0, 5, 0);
 let css2drenderer = null; // new CSS2DRenderer();
-let label2d = null;
+let label2d = [null,null];
 let lineSwitch = null; // false;
 let lineStartPosition = null;
+let lineTergetIndex = 0;
+
+let points = [
+  { x: -2.093, y: 8.291, z: 2.110 }, // 屋根
+  { x: 1.2558, y: 0.950, z: -0.955 }, // 柱
+];
 
 // テーマ変化通知
 watch(darkTheme, (newValue) => {
@@ -151,13 +157,30 @@ onMounted( async () => {
   // document.body.appendChild(css2drenderer.domElement)
   mount.value.appendChild(css2drenderer.domElement); // mount.value が親要素となる。mount.value(div)タグには relative 指定してある
 
-  const div = document.createElement('div');
-  div.textContent = '●';
-  div.color="primary"; // vuetify colorに従う
-  // div.style.color = 'black';
-  label2d = new CSS2DObject(div);
-  label2d.position.set(-2.093, 8.291, 2.110);
-  scene.add(label2d);
+
+  // let points = [
+  //   { x: -2.093, y: 8.291, z: 2.110 }, // 屋根
+  //   { x: 1.2558, y: 0.950, z: -0.955 }, // 柱
+  // ];
+  // points.forEach(point => {
+  for (let i = 0; i < points.length; i++) {
+    const point = points[i];
+    const div = document.createElement('div');
+    div.textContent = '●';
+    div.color="primary"; // vuetify colorに従う
+    // div.style.color = 'black';
+    label2d[i] = new CSS2DObject(div);
+    label2d[i].position.set(point.x, point.y, point.z);
+    scene.add(label2d[i]);
+  }
+  
+  // const div = document.createElement('div');
+  // div.textContent = '●';
+  // div.color="primary"; // vuetify colorに従う
+  // // div.style.color = 'black';
+  // label2d = new CSS2DObject(div);
+  // label2d.position.set(-2.093, 8.291, 2.110);
+  // scene.add(label2d);
 
   // 2D canvasパネル
   // canvas2d = document.createElement('canvas');
@@ -217,20 +240,19 @@ onMounted( async () => {
     renderer.render(scene, camera);
     css2drenderer.render(scene, camera);
 
-    // 3Dオブジェクトのワールド座標を取得する
-    const worldPosition = label2d.getWorldPosition(new THREE.Vector3());
-    // スクリーン座標を取得する
-    const rect = mount.value.getBoundingClientRect();
-    const projection = worldPosition.project(camera);
-    const sx = (rect.width / 2) * (+projection.x + 1.0);
-    const sy = (rect.height / 2) * (-projection.y + 1.0);
-
     // 2Dコンテキストを取得
     const ctx = canvas2d.value.getContext('2d');
     ctx.clearRect(0, 0, canvas2d.value.width, canvas2d.value.height);
 
     // v-chip要素の背景色の取得
     if ( true == lineSwitch ) {
+      // 3Dオブジェクトのワールド座標を取得する
+      const worldPosition = label2d[lineTergetIndex].getWorldPosition(new THREE.Vector3());
+      // スクリーン座標を取得する
+      const rect = mount.value.getBoundingClientRect();
+      const projection = worldPosition.project(camera);
+      const sx = (rect.width / 2) * (+projection.x + 1.0);
+      const sy = (rect.height / 2) * (-projection.y + 1.0);
       const colors = vuetify.theme.current.value.colors;
       // const variables = vuetify.theme.current.value.variables;
       // const vc = document.querySelector('.v-chip__underlay'); // 無理やりだが vuetify カラーに従う
@@ -309,12 +331,13 @@ const setClearColor = () => {
   }
 };
 
-const pointClick = (event) => {
+const pointClick = (event, index) => {
   if (mount.value) {
     const rect = mount.value.getBoundingClientRect();
     const x = event.clientX - rect.left; // div要素内でのx座標
     const y = event.clientY - rect.top; // div要素内でのy座標
     lineSwitch = true;
+    lineTergetIndex = index;
     lineStartPosition = { 'x': x, 'y': y };
   }
 };
