@@ -15,7 +15,7 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
-import { inject, ref, watch, onMounted, nextTick } from 'vue';
+import { inject, ref, watch, onMounted, nextTick, onBeforeUnmount } from 'vue';
 
 const name = 'Model3DComposition';
 const darkTheme = inject('darkTheme');
@@ -26,6 +26,7 @@ const point1 = ref(null);
 const point2 = ref(null);
 const canvas2d = ref(null);
 
+let animateID = null;
 let headerSize = null; // header 分減算用
 let scene = null; // new THREE.Scene();
 let camera = null; // new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight - this.header_size), 0.1, 1000);
@@ -53,6 +54,10 @@ watch(darkTheme, (newValue) => {
   }
   console.log('darkTheme.value:', newValue);
 }, { immediate: true }); // trueの場合、初期化時にも呼ばれる。falseの場合、変更後に呼ばれる
+
+onBeforeUnmount(() => {
+  stopAnimation();
+});
 
 // 起動時
 onMounted( async () => {
@@ -173,7 +178,7 @@ onMounted( async () => {
     label2d[i].position.set(point.x, point.y, point.z);
     scene.add(label2d[i]);
   }
-  
+
   // const div = document.createElement('div');
   // div.textContent = '●';
   // div.color="primary"; // vuetify colorに従う
@@ -223,7 +228,7 @@ onMounted( async () => {
   const animate = () => {
     // const left2 = label2d.element.style.left;
     // const top2 = label2d.element.style.top;
-    requestAnimationFrame(animate);
+    animateID = requestAnimationFrame(animate);
     // キューブの周りをカメラが回るようにする
     const elapsedTime = clock.getElapsedTime();
     camera.position.x = Math.cos(elapsedTime * 0.1) * camerapos.offset;
@@ -283,6 +288,10 @@ onMounted( async () => {
   ro.observe(mount.value);
 });
 
+const stopAnimation = () => {
+  cancelAnimationFrame(animateID);
+};
+
 const clickPosition = (event) => {
   const rect = mount.value.getBoundingClientRect();
   const x = event.clientX - rect.left; // div要素内でのx座標
@@ -298,11 +307,12 @@ const clickPosition = (event) => {
   // オブジェクトの取得
   // sceneは作成済みのThree.jsのシーン
   const intersects = raycaster.intersectObjects( scene.children );
-
-  // WEBコンソールにオブジェクト上の座標を出力
-  console.log( 'x座標=%f', intersects[0].point.x );
-  console.log( 'y座標=%f', intersects[0].point.y );
-  console.log( 'z座標=%f', intersects[0].point.z );
+  if ( intersects.length > 0 ) {
+    // クリック位置にオブジェクトがあれば、座標を出力
+    console.log( 'x座標=%f', intersects[0].point.x );
+    console.log( 'y座標=%f', intersects[0].point.y );
+    console.log( 'z座標=%f', intersects[0].point.z );
+  }
 };
 
 const onWindowResize = () => {
