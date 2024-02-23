@@ -16,6 +16,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { inject, ref, watch, onMounted, nextTick, onBeforeUnmount } from 'vue';
+import { CameraAnimator } from '@renderer/utils/CameraAnimator.js';
 
 const name = 'Model3DComposition';
 const darkTheme = inject('darkTheme');
@@ -30,6 +31,7 @@ let animateID = null;
 let headerSize = null; // header 分減算用
 let scene = null; // new THREE.Scene();
 let camera = null; // new THREE.PerspectiveCamera(75, window.innerWidth / (window.innerHeight - this.header_size), 0.1, 1000);
+let cameraAnimator = null;
 let renderer = null; // new THREE.WebGLRenderer({ antialias: true }); // アンチエイリアシングを有効にする
 let cube = null;
 let cube2 = null;
@@ -37,14 +39,20 @@ let clock = null; // new THREE.Clock();
 let camerapos = null; // new THREE.Vector3(0, 7, 0);
 let targetpos = null; // new THREE.Vector3(0, 5, 0);
 let css2drenderer = null; // new CSS2DRenderer();
-let label2d = [null,null];
+let label2d = [null, null];
 let lineSwitch = null; // false;
 let lineStartPosition = null;
 let lineTergetIndex = 0;
-
+let moveAction = null; // new MoveAction();
 let points = [
   { x: -2.093, y: 8.291, z: 2.110 }, // 屋根
   { x: 1.2558, y: 0.950, z: -0.955 }, // 柱
+];
+
+let movePoints = [
+  { x: -20, y: 0, z: 0 }, // point1用
+  { x: 20, y: 10, z: 0 }, // point2用
+  { x: 0, y: 30, z: 0 }, // 中間用
 ];
 
 // テーマ変化通知
@@ -108,7 +116,7 @@ onMounted( async () => {
   // キューブを作成（ワイヤーフレーム用）
   const wireframeGeometry = new THREE.BoxGeometry(1, 1, 1);
   const wireframeMaterial = new THREE.MeshBasicMaterial({ color: 0x404040, wireframe: true }); // 黒色のワイヤーフレーム
-  const wireframeCube = new THREE.Mesh(geometry3, wireframeMaterial);
+  const wireframeCube = new THREE.Mesh(wireframeGeometry, wireframeMaterial);
   wireframeCube.position.y = 0.5;
   wireframeCube.position.x = 2.0;
   scene.add(wireframeCube);
@@ -139,15 +147,10 @@ onMounted( async () => {
     console.error(error);
   });
 
-  // カメラ位置
-  camerapos = new THREE.Vector3(0, 7, 0);
-  camerapos.offset = 7;
-  camerapos.z = camerapos.offset;
-  camera.position.x = camerapos.x;
-  camera.position.y = camerapos.y;
-  camera.position.z = camerapos.z;
-  // カメラターゲット
-  targetpos = new THREE.Vector3(0, 5, 0);
+  // カメラアニメーション生成
+  // camera.lookAt(new THREE.Vector3(0, 5, 0)); // 注視点位置
+  cameraAnimator = new CameraAnimator(camera);
+  cameraAnimator.changeAction(0);
 
   // css2D レンダーラー作成
   // https://sbcode.net/threejs/glasses/
@@ -162,12 +165,6 @@ onMounted( async () => {
   // document.body.appendChild(css2drenderer.domElement)
   mount.value.appendChild(css2drenderer.domElement); // mount.value が親要素となる。mount.value(div)タグには relative 指定してある
 
-
-  // let points = [
-  //   { x: -2.093, y: 8.291, z: 2.110 }, // 屋根
-  //   { x: 1.2558, y: 0.950, z: -0.955 }, // 柱
-  // ];
-  // points.forEach(point => {
   for (let i = 0; i < points.length; i++) {
     const point = points[i];
     const div = document.createElement('div');
@@ -179,69 +176,9 @@ onMounted( async () => {
     scene.add(label2d[i]);
   }
 
-  // const div = document.createElement('div');
-  // div.textContent = '●';
-  // div.color="primary"; // vuetify colorに従う
-  // // div.style.color = 'black';
-  // label2d = new CSS2DObject(div);
-  // label2d.position.set(-2.093, 8.291, 2.110);
-  // scene.add(label2d);
-
-  // 2D canvasパネル
-  // canvas2d = document.createElement('canvas');
-  // canvas2d.style.position = 'absolute';
-  // canvas2d.style.top = '0px';
-  // canvas2d.style.pointerEvents = 'none';
-  // canvas2d.style.zIndex = '1';
-  // canvas2d.width = rect.width;
-  // canvas2d.height = rect.height;
-  // mount.value.appendChild(canvas2d);
-
-  // // vue パネル
-  // vuePanel = document.createElement('div');
-  // vuePanel.style.position = 'absolute';
-  // vuePanel.style.top = '0px'
-  // vuePanel.style.pointerEvents = 'none'
-  // vuePanel.width = rect.width;
-  // vuePanel.height = rect.height;
-  // mount.value.appendChild(vuePanel);
-
-  // const geometryLine = new THREE.Geometry();
-  // geometryLine.vertices.push(new THREE.Vector3(10, 20, 0));
-  // geometryLine.vertices.push(new THREE.Vector3(100, 200, 0));
-  // const materialLine = new THREE.MeshPhysicalMaterial({ color: 0x8080f0 });
-  // // 線の作成
-  // const line = new THREE.Line(geometryLine, materialLine);
-
-  // // 線のマテリアルを作成
-  // const materialLine = new THREE.LineBasicMaterial({ color: 0xff00ff });
-  // // 線を引くための頂点を設定
-  // const geometryLine = new THREE.BufferGeometry();
-  // geometryLine.setFromPoints([
-  //   new THREE.Vector3(10, 20, 0),
-  //   new THREE.Vector3(100, 200, 0),
-  // ]);
-  // // 線の作成
-  // const line = new THREE.Line(geometryLine, materialLine);
-  // scene.add(line);
-
-  const animate = () => {
-    // const left2 = label2d.element.style.left;
-    // const top2 = label2d.element.style.top;
+  const animate = (currentTime) => {
     animateID = requestAnimationFrame(animate);
-    // キューブの周りをカメラが回るようにする
-    const elapsedTime = clock.getElapsedTime();
-    camera.position.x = Math.cos(elapsedTime * 0.1) * camerapos.offset;
-    camera.position.z = Math.sin(elapsedTime * 0.1) * camerapos.offset;
-    // y(上から）
-    // camera.position.x = 0;
-    // camera.position.y = 30;
-    // camera.position.z = 0;
-    // // X（左から）
-    // camera.position.x = -10;
-    // camera.position.y = targetpos.y+2;
-    // camera.position.z = 0;
-    camera.lookAt(targetpos);
+    cameraAnimator.animate(currentTime);
     renderer.render(scene, camera);
     css2drenderer.render(scene, camera);
 
@@ -259,11 +196,6 @@ onMounted( async () => {
       const sx = (rect.width / 2) * (+projection.x + 1.0);
       const sy = (rect.height / 2) * (-projection.y + 1.0);
       const colors = vuetify.theme.current.value.colors;
-      // const variables = vuetify.theme.current.value.variables;
-      // const vc = document.querySelector('.v-chip__underlay'); // 無理やりだが vuetify カラーに従う
-      // const bgColor = window.getComputedStyle(vc).backgroundColor;
-      // 線の色をv-chipの背景色に設定
-      // ctx.strokeStyle = bgColor;
       ctx.strokeStyle = colors['on-background']; //  'rgba(214, 214, 214, 1)'; // 赤色
       ctx.lineWidth = 1;
       // 線を描く
@@ -272,13 +204,10 @@ onMounted( async () => {
       ctx.lineTo(sx, sy); // 線を描く
       ctx.stroke(); // パスを描画
     }
-
-    // const left = label2d.element.style.left;
-    // const top = label2d.element.style.top;
-    // console.log(`label2d = ${top}:${left}`);
   };
 
-  animate();
+  animateID = requestAnimationFrame(animate);
+  // animate();
 
   // リサイズイベントのリスナーを追加
   // window.addEventListener('resize', onWindowResize, false);
@@ -292,6 +221,10 @@ const stopAnimation = () => {
   cancelAnimationFrame(animateID);
 };
 
+/**
+ * クリック位置の３Dオブジェクト座標を取得
+ * @param {object} event イベント
+ */
 const clickPosition = (event) => {
   const rect = mount.value.getBoundingClientRect();
   const x = event.clientX - rect.left; // div要素内でのx座標
@@ -315,14 +248,17 @@ const clickPosition = (event) => {
   }
 };
 
+/**
+ * リサイズイベント
+ */
 const onWindowResize = () => {
   // リサイズされたときにレンダラーとカメラのサイズを更新
   if (mount.value) {
     const rect = mount.value.getBoundingClientRect();
     canvas2d.value.width = rect.width;
     canvas2d.value.height = rect.height;
-    const x = rect.left;
-    const y = rect.top;
+    // const x = rect.left;
+    // const y = rect.top;
     const width = mount.value.offsetWidth;
     const height = mount.value.offsetHeight;
     camera.aspect = width / height;
@@ -333,6 +269,9 @@ const onWindowResize = () => {
   }
 };
 
+/*
+ * threejs の背景食を設定
+ */
 const setClearColor = () => {
   if (darkTheme.value) {
     renderer.setClearColor(0x404040); // 暗い灰色に設定
@@ -341,6 +280,10 @@ const setClearColor = () => {
   }
 };
 
+
+/*
+ * ポイントパネルクリックイベント
+ */
 const pointClick = (event, index) => {
   if (mount.value) {
     const rect = mount.value.getBoundingClientRect();
@@ -349,6 +292,7 @@ const pointClick = (event, index) => {
     lineSwitch = true;
     lineTergetIndex = index;
     lineStartPosition = { 'x': x, 'y': y };
+    cameraAnimator.changeAction(index+1);
   }
 };
 
