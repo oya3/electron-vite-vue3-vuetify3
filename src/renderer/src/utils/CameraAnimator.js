@@ -30,12 +30,14 @@ class CameraAnimator {
     this.camera = camera; // カメラ位置保持
     this.mode = 0; // 0: 回転, 1: point1移動, 2: point2 移動
     this.action = null; // this.ChangeAction(0);
+    this.completeTime = null;
   }
 
   // カメラアクションを変更
   // @param {Number} mode - モード
   // @param {Object} params - パラメータ
   changeAction(mode, params) {
+    this.completeTime = null;
     if (mode == 1) {
       this.action = new MoveAction(this.camera, CameraAnimator.movePoints1, 3000);
       return;
@@ -47,10 +49,20 @@ class CameraAnimator {
   }
 
   // アニメーション実行
+  // @param {Number} - ms
   animate(currentTime) {
-    this.action.animate(currentTime);
-    // this.camera.position.copy(this.action.currentPosition);
-    // this.camera.lookAt(this.action.targetPosition);
+    if ( null != this.completeTime ) {
+      // アニメーション完了後、20秒経過するとmode=0に戻す
+      if ( (currentTime - this.completeTime) > (5 * 1000) ) {
+        this.changeAction(0);
+      }
+      return;
+    }
+    if ( 1 == this.action.animate(currentTime) ){
+      this.completeTime = currentTime
+      // this.camera.position.copy(this.action.currentPosition);
+      // this.camera.lookAt(this.action.targetPosition);
+    }
   }
 }
 
@@ -74,7 +86,7 @@ class RotateAction {
     this.camera.position.z = Math.sin(rad * 0.1) * this.offset.z;
     this.camera.position.y = this.offset.y;
     this.camera.lookAt(this.cameraLookAtTarget); // 注視点位置
-    return 1; // 移動完了を示す
+    return 0;
   }
 }
 
