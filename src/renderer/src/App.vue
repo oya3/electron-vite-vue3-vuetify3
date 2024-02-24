@@ -2,7 +2,7 @@
 <v-app>
   <v-app-bar color="titlebar">
 
-    <v-app-bar-nav-icon 
+    <v-app-bar-nav-icon
       variant="text"
       @click.stop="drawer = !drawer">
     </v-app-bar-nav-icon>
