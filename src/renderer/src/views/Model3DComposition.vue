@@ -43,17 +43,20 @@ let label2d = [null, null];
 let lineSwitch = null; // false;
 let lineStartPosition = null;
 let lineTergetIndex = 0;
-let moveAction = null; // new MoveAction();
-let points = [
+
+/*
+// タワー用
+const points = [
   { x: -2.093, y: 8.291, z: 2.110 }, // 屋根
   { x: 1.2558, y: 0.950, z: -0.955 }, // 柱
 ];
-
-let movePoints = [
-  { x: -20, y: 0, z: 0 }, // point1用
-  { x: 20, y: 10, z: 0 }, // point2用
-  { x: 0, y: 30, z: 0 }, // 中間用
+*/
+// ロッジ用
+const points = [
+  { x: 0.036, y: 5.307, z: 5.658 }, // 注視点 point1 屋根
+  { x: -5.955, y: 5.777, z: -0.890 }, // 注視点 point2 柱
 ];
+
 
 // テーマ変化通知
 watch(darkTheme, (newValue) => {
@@ -139,13 +142,27 @@ onMounted( async () => {
   // GLTFLoaderのインスタンスを作成
   const loader = new GLTFLoader();
   // GLBファイルの読み込み
-  const glbFileBody = await window.api.getFileBody('/models/model.glb');
-  console.log("glbFileBody:" + glbFileBody);
+  // const glbFileBody = await window.api.getFileBody('/models/model.glb');
+  const glbFileBody = await window.api.getFileBody('/models/lodge.glb');
+  // console.log("glbFileBody:" + glbFileBody); // 読み込んだglbファイル内を表示
+  const parseModel = (buffer) => {
+    return new Promise((resolve, reject) => {
+      loader.parse(buffer, '', resolve, reject);
+    });
+  };
+  try {
+    const gltf = await parseModel(glbFileBody.buffer);
+    scene.add(gltf.scene);
+  } catch (error) {
+    console.error(error);
+  }
+  /*
   loader.parse(glbFileBody.buffer, '', (gltf) => {
     scene.add(gltf.scene);
   }, function(error) {
     console.error(error);
   });
+  */
 
   // カメラアニメーション生成
   // camera.lookAt(new THREE.Vector3(0, 5, 0)); // 注視点位置
