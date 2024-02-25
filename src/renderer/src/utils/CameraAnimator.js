@@ -39,7 +39,7 @@ class CameraAnimator {
     // z座標=5.672937870025635
     { x: -2.6, y: 3.8, z: 10.1 }, // カメラ位置 point1 屋根
     { x: 0.036, y: 5.307 - 2.2, z: 5.658 }, // 注視点 point1 屋根
-    { x: 0, y: 5, z: 0 }, // 注視点中間用
+    { x: 0, y: 20, z: 0 }, // 注視点中間用
     // { x: 1.2558, y: 0.950, z: -0.955 }, // 注視点 point2 柱
     // { x: -2.093, y: 8.291, z: 2.110 }, // 注視点 point1 屋根
   ];
@@ -50,7 +50,7 @@ class CameraAnimator {
     // z座標=-0.9512399126735374
     { x: -8, y: 1.5, z: 0 }, // カメラ位置 point2 柱
     { x: -5.955, y: 5.777 - 1, z: -0.890 }, // 注視点 point2 柱
-    { x: 0, y: 5, z: 0 }, // 注視点中間用
+    { x: 0, y: 20, z: 0 }, // 注視点中間用
     // { x: -2.093, y: 8.291, z: 2.110 }, // 注視点 point1 屋根
     // { x: 1.2558, y: 0.950, z: -0.955 }, // 注視点 point2 柱
   ];
@@ -136,7 +136,7 @@ class MoveAction {
     this.endPosition = new THREE.Vector3(points[0].x, points[0].y, points[0].z);
     this.curve = new THREE.CatmullRomCurve3([
       this.startPosition,
-      // this.midPosition,
+      this.midPosition,
       this.endPosition,
     ]);
 
@@ -149,7 +149,7 @@ class MoveAction {
     this.endLookAt = new THREE.Vector3(points[1].x, points[1].y, points[1].z);
     this.curveLookAt = new THREE.CatmullRomCurve3([
       this.startLookAt,
-      // this.midLookAt,
+      this.startPosition,
       this.endLookAt,
     ]);
     this.duration = duration;
