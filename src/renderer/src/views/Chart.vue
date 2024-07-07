@@ -13,7 +13,7 @@
     <v-col
       cols="10"
       >
-      <div style="width: 100%; max-height: 650px;"> 
+      <div style="width: 100%; max-height: 650px;">
         <div style="width: 100%; height: 100%;">
           <v-btn @click="reset_chart">reset</v-btn>
           <Bar
@@ -23,7 +23,7 @@
             />
         </div>
       </div>
-      <div style="width: 100%; height: 400px;"> 
+      <div style="width: 100%; height: 400px;">
         <v-row style="width: 100%; height: 100%;">
           <v-col
             cols="6"
@@ -46,7 +46,7 @@
           </v-col>
         </v-row>
       </div>
-      <div style="width: 100%; max-height: 650px;"> 
+      <div style="width: 100%; max-height: 650px;">
         <div style="width: 100%; height: 100%;">
           <Line
             ref="chartCombinedBar"
@@ -62,10 +62,12 @@
 
 <script>
 import Tree from 'vue3-treeview';
-import {Bar, Line, Pie} from 'vue-chartjs';
-import {Chart as ChartJS, Title, Tooltip, Legend, BarElement, PointElement, LineElement, ArcElement, CategoryScale, LinearScale} from 'chart.js';
+import { Bar, Line, Pie } from 'vue-chartjs';
+import {
+  Chart as ChartJS, Title, Tooltip, Legend, BarElement, PointElement,
+  LineElement, ArcElement, CategoryScale, LinearScale } from 'chart.js';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import {inject} from 'vue';
+import { inject } from 'vue';
 
 ChartJS.register(Title, Tooltip, Legend, BarElement, PointElement, LineElement, ArcElement, CategoryScale, LinearScale, zoomPlugin);
 
@@ -225,8 +227,8 @@ export default {
             },
             limits: {
               // axis limits
-              x: {min: 0, max: 200},
-              y: {min: 0, max: 200},
+              x: { min: 0, max: 200 },
+              y: { min: 0, max: 200 },
               // x: {min: 0},
               // y: {min: 0},
             },
@@ -313,8 +315,8 @@ export default {
             },
             limits: {
               // axis limits
-              x: {min: 0, max: 100},
-              y: {min: 0, max: 100},
+              x: { min: 0, max: 100 },
+              y: { min: 0, max: 100 },
             },
             zoom: {
               wheel: {
@@ -439,8 +441,8 @@ export default {
             },
             limits: {
               // axis limits
-              x: {min: 0, max: 200},
-              y: {min: 0, max: 200},
+              x: { min: 0, max: 200 },
+              y: { min: 0, max: 200 },
               // x: {min: 0},
               // y: {min: 0},
             },
