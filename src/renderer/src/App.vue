@@ -45,6 +45,11 @@
           <v-icon :icon="mdiChartBar" />
         </template>
       </v-list-item>
+      <v-list-item title="Plotly" value="plotly" @click="$router.push({ path: '/plotly' })">
+        <template v-slot:prepend>
+          <v-icon :icon="mdiChartBar" />
+        </template>
+      </v-list-item>
       <v-list-item title="Model3D" value="model3d" @click="$router.push({ path: '/model3d' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiVideo3dVariant" />
@@ -74,7 +79,9 @@
 </template>
 
 <script setup>
-import { mdiHomeAccount, mdiChartBar, mdiInformationOutline, mdiWeatherNight, mdiWeatherSunny, mdiVideo3dVariant, mdiAccount } from '@mdi/js'
+import {
+  mdiHomeAccount, mdiChartBar, mdiInformationOutline, mdiWeatherNight, mdiWeatherSunny,
+  mdiVideo3dVariant, mdiAccount } from '@mdi/js'
 import { ref, provide } from 'vue'
 import { useTheme } from 'vuetify'
 

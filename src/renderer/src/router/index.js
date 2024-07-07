@@ -18,6 +18,11 @@ const routes = [
     component: () => import('../views/ChartComposition.vue'),
   },
   {
+    path: '/plotly',
+    name: 'Plotly',
+    component: () => import('../views/Plotly.vue'),
+  },
+  {
     path: '/model3d',
     name: 'Model3D',
     component: () => import('../views/Model3D.vue'),

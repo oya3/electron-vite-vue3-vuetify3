@@ -48,6 +48,6 @@ module.exports = {
     'space-before-function-paren': ['off'],
 
     // 行数
-    'max-len': ['error', { 'code': 140 }],
+    'max-len': ['error', { 'code': 160 }],
   },
 };
