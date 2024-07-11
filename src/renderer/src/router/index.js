@@ -18,9 +18,9 @@ const routes = [
     component: () => import('../views/ChartComposition.vue'),
   },
   {
-    path: '/plotly',
-    name: 'Plotly',
-    component: () => import('../views/Plotly.vue'),
+    path: '/plotly/bar',
+    name: 'PlotlyBar',
+    component: () => import('../views/Plotly/Bar.vue'),
   },
   {
     path: '/model3d',

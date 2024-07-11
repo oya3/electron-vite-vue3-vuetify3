@@ -45,7 +45,7 @@
           <v-icon :icon="mdiChartBar" />
         </template>
       </v-list-item>
-      <v-list-item title="Plotly" value="plotly" @click="$router.push({ path: '/plotly' })">
+      <v-list-item title="Plotly" value="plotly" @click="$router.push({ path: '/plotly/bar' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiChartBar" />
         </template>
