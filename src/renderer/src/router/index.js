@@ -23,6 +23,11 @@ const routes = [
     component: () => import('../views/Plotly/Bar.vue'),
   },
   {
+    path: '/plotly/gantt',
+    name: 'PlotlyGantt',
+    component: () => import('../views/Plotly/Gantt.vue'),
+  },
+  {
     path: '/model3d',
     name: 'Model3D',
     component: () => import('../views/Model3D.vue'),
