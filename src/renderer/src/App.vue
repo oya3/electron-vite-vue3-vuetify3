@@ -70,6 +70,11 @@
           <v-icon :icon="mdiInformationOutline" />
         </template>
       </v-list-item>
+      <v-list-item title="ListTest" value="listtest" @click="$router.push({ path: '/listtest' })">
+        <template v-slot:prepend>
+          <v-icon :icon="mdiInformationOutline" />
+        </template>
+      </v-list-item>
     </v-list>
   </v-navigation-drawer>
 
