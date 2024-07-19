@@ -490,6 +490,8 @@ const layout = {
 */
 
 /*
+// -------------------------------------------------------------------------------
+// bar で2個のタスクを並べてるが、終端が設定できない＋アイドル時間（空き時間）が設定できない
 const data = [
   {
     type: 'bar',
@@ -516,34 +518,62 @@ const layout = {
     autorange: 'reversed',
   }
 };
+
+onMounted(() => {
+  if (!graph.value) return;
+  // Plotly.newPlot(graph.value, data, layout);
+  Plotly.newPlot(graph.value, data, layout);
+});
 */
 
-
-const data = [
+/*
+// -------------------------------------------------------------------------------
+// traceを2個、同名のnameして2個のタスクを並べてる。が、凡例にalexが2個並ぶ。。。
+var data = [
   {
-    type: 'bar',
-    x: ['2009-06-20', '2009-10-20'],
+    x: ['2009-01-01', '2009-02-28'],
+    y: ['Job A', 'Job A'],
+    mode: 'lines',
+    name: 'Alex',
+    hoverinfo: 'name+x',
+    line: {color: '#1f77b4', width: 20},
+    // hoveron: 'fills'
+  },
+  {
+    x: ['2009-03-05', '2009-04-15'],
+    y: ['Job A', 'Job A'],
+    mode: 'lines',
+    name: 'Alex',
+    hoverinfo: 'name+x',
+    line: {color: '#1f77b4', width: 20},
+    // hoveron: 'fills'
+  },
+  {
+    x: ['2009-02-20', '2009-05-30'],
     y: ['Job C', 'Job C'],
-    base: ['2009-05-30', '2009-08-30'],
-    orientation: 'h',
-    marker: { color: ['#d62728', '#9467bd'] },
-    text: ['Alex', 'Max'],
-    hoverinfo: 'text',
+    mode: 'lines',
+    name: 'Max',
+    hoverinfo: 'name+x',
+    line: {color: '#ff7f0e', width: 20},
+    // hoveron: 'fills'
   }
 ];
 
-const layout = {
-  title: 'Gantt chart',
-  barmode: 'group',
+// レイアウトの設定
+var layout = {
+  title: 'Gantt Chart',
+  yaxis: {
+    title: 'Job',
+    showgrid: false,
+    zeroline: false,
+    autorange: 'reversed',
+  },
   xaxis: {
     title: 'Date',
-    type: 'date',
-    range: ['2009-01-01', '2011-12-01'],
-    tickformat: '%Y/%m/%d',
+    showgrid: false,
+    zeroline: false
   },
-  yaxis: {
-    autorange: 'reversed',
-  }
+  hovermode: 'closest'
 };
 
 onMounted(() => {
@@ -551,5 +581,170 @@ onMounted(() => {
   // Plotly.newPlot(graph.value, data, layout);
   Plotly.newPlot(graph.value, data, layout);
 });
+*/
+
+/*
+// -------------------------------------------------------------------------------
+// traceを2個、同名のnameして2個のタスクを並べてる。が、凡例にalexが2個並ぶ。。。
+var data = [
+  {
+    x: ['2009-01-01', '2009-02-28'],
+    y: ['Job A', 'Job A'],
+    mode: 'lines+markers',
+    name: 'Job A',
+    hoverinfo: 'name+x',
+    line: {color: '#1f77b4', width: 20},
+  },
+  {
+    x: ['2009-03-05', '2009-04-15'],
+    y: ['Job A', 'Job A'],
+    mode: 'lines+markers',
+    name: 'Job A',
+    hoverinfo: 'name+x',
+    line: {color: '#1f77b4', width: 20},
+  },
+  {
+    x: ['2009-02-20', '2009-05-30'],
+    y: ['Job C', 'Job C'],
+    mode: 'lines+markers',
+    name: 'Job C',
+    hoverinfo: 'name+x',
+    line: {color: '#ff7f0e', width: 20},
+  }
+];
+
+// レイアウトの設定
+var layout = {
+  title: 'Gantt Chart',
+  yaxis: {
+    title: 'Job',
+    showgrid: false,
+    zeroline: false,
+    autorange: 'reversed',
+  },
+  xaxis: {
+    title: 'Date',
+    showgrid: false,
+    zeroline: false
+  },
+  hovermode: 'closest'
+};
+
+onMounted(() => {
+  if (!graph.value) return;
+  Plotly.newPlot(graph.value, data, layout);
+});
+*/
+
+/*
+// -------------------------------------------------------------------------------
+// traceを2個、同名のnameして2個のタスクを並べてる。が、凡例にalexが2個並ぶ。。。
+const trace1 = {
+  x: ['2009-01-01', '2009-02-28'], // Alexの活動期間
+  y: ['Alex', 'Alex'], // リソース名
+  mode: 'lines',
+  name: 'Alex',
+  line: {color: 'blue', width: 20}
+}
+
+const trace2 = {
+  x: ['2009-04-01', '2009-05-28'], // Alexの活動期間
+  y: ['Alex', 'Alex'], // リソース名
+  mode: 'lines',
+  name: 'Alex',
+  line: {color: 'blue', width: 20}
+}
+
+const trace3 = {
+  x: ['2009-03-01', '2009-06-30'], // Maxの活動期間
+  y: ['Max', 'Max'], // リソース名
+  mode: 'lines',
+  name: 'Max',
+  line: {color: 'red', width: 20}
+}
+
+const data = [trace1, trace2, trace3]
+
+const layout = {
+  showlegend: true,
+  xaxis: {
+    showgrid: false,
+    showline: true,
+    linecolor: 'rgb(102, 102, 102)',
+    titlefont: {font: {color: 'rgb(204, 204, 204)'}},
+    tickfont: {font: {color: 'rgb(102, 102, 102)'}},
+    autotick: false,
+    dtick: 'M1',
+    ticks: 'outside',
+    tickcolor: 'rgb(102, 102, 102)'
+  },
+  yaxis: {
+    autorange: 'reversed',
+  },
+  margin: {l: 140, r: 40, b: 50, t: 80},
+  legend: {font: {size: 10}, yanchor: 'middle', xanchor: 'right'},
+  width: 800,
+  height: 600,
+  paper_bgcolor: 'rgb(254, 247, 234)',
+  plot_bgcolor: 'rgb(254, 247, 234)',
+  hovermode: 'closest'
+}
+
+onMounted(() => {
+  if (!graph.value) return;
+  Plotly.newPlot(graph.value, data, layout);
+});
+*/
+
+// -------------------------------------------------------------------------------
+// null を用いて2個のタスクを表示している。
+const trace1 = {
+  x: ['2009-01-01', '2009-02-28', null, '2009-04-01', '2009-05-28'], // Alexの活動期間
+  y: ['Alex', 'Alex', null, 'Alex', 'Alex'], // リソース名
+  mode: 'lines',
+  name: 'Alex',
+  line: {color: 'blue', width: 20}
+}
+
+const trace3 = {
+  x: ['2009-03-01', '2009-06-30'], // Maxの活動期間
+  y: ['Max', 'Max'], // リソース名
+  mode: 'lines',
+  name: 'Max',
+  line: {color: 'red', width: 20}
+}
+
+const data = [trace1, trace3]
+
+const layout = {
+  showlegend: true,
+  xaxis: {
+    showgrid: false,
+    showline: true,
+    linecolor: 'rgb(102, 102, 102)',
+    titlefont: {font: {color: 'rgb(204, 204, 204)'}},
+    tickfont: {font: {color: 'rgb(102, 102, 102)'}},
+    autotick: false,
+    dtick: 'M1',
+    ticks: 'outside',
+    tickcolor: 'rgb(102, 102, 102)'
+  },
+  yaxis: {
+    autorange: 'reversed',
+  },
+  margin: {l: 140, r: 40, b: 50, t: 80},
+  legend: {font: {size: 10}, yanchor: 'middle', xanchor: 'right'},
+  width: 800,
+  height: 600,
+  paper_bgcolor: 'rgb(254, 247, 234)',
+  plot_bgcolor: 'rgb(254, 247, 234)',
+  hovermode: 'closest'
+}
+
+onMounted(() => {
+  if (!graph.value) return;
+  Plotly.newPlot(graph.value, data, layout);
+});
+
 </script>
 
