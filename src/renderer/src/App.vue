@@ -45,16 +45,27 @@
           <v-icon :icon="mdiChartBar" />
         </template>
       </v-list-item>
-      <v-list-item title="PlotlyBar" value="plotlybar" @click="$router.push({ path: '/plotly/bar' })">
-        <template v-slot:prepend>
-          <v-icon :icon="mdiChartBar" />
+
+      <v-list-group value="Admin">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" title="Admin">
+            <template v-slot:prepend>
+              <v-icon :icon="mdiChartBar" />
+            </template>
+          </v-list-item>
         </template>
-      </v-list-item>
-      <v-list-item title="PlotlyGantt" value="plotlygantt" @click="$router.push({ path: '/plotly/Gantt' })">
-        <template v-slot:prepend>
-          <v-icon :icon="mdiChartBar" />
-        </template>
-      </v-list-item>
+        <v-list-item title="PlotlyBar" value="plotlybar" @click="$router.push({ path: '/plotly/bar' })">
+          <template v-slot:prepend>
+            <v-icon :icon="mdiChartBar" />
+          </template>
+        </v-list-item>
+        <v-list-item title="PlotlyGantt" value="plotlygantt" @click="$router.push({ path: '/plotly/Gantt' })">
+          <template v-slot:prepend>
+            <v-icon :icon="mdiChartBar" />
+          </template>
+        </v-list-item>
+      </v-list-group>
+
       <v-list-item title="Model3D" value="model3d" @click="$router.push({ path: '/model3d' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiVideo3dVariant" />
