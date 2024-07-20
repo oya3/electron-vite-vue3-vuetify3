@@ -20,6 +20,7 @@
       </template>
     </Vue3TreeVue>
   </div>
+  <!--
   <div>
     <BaseTree class="mtl-tree" v-model="heTreeData" treeLine>
       <template #default="{ node, stat }">
@@ -33,6 +34,25 @@
           class="mtl-checkbox mtl-mr"
           type="checkbox"
           v-model="stat.checked"
+          />
+        <span class="mtl-ml">{{ node.text }}</span>
+      </template>
+    </BaseTree>
+  </div>
+  -->
+  <div>
+    <BaseTree class="mtl-tree" v-model="heTreeData" treeLine>
+      <template #default="{ node, stat }">
+        <OpenIcon
+          v-if="stat.children.length"
+          :open="stat.open"
+          class="mtl-mr"
+          @click.native="stat.open = !stat.open"
+          />
+        <input
+          class="mtl-checkbox mtl-mr"
+          type="checkbox"
+          v-model="node.myCheck"
           />
         <span class="mtl-ml">{{ node.text }}</span>
       </template>
@@ -102,38 +122,52 @@ export default {
       heTreeData: [
         {
           text: 'Projects',
+          myCheck: false,
           children: [
             {
               text: 'Frontend',
+              myCheck: false,
               children: [
                 {
                   text: 'Vue',
+                  myCheck: false,
                   children: [
                     {
                       text: 'Nuxt',
+                      myCheck: false,
                     },
                   ],
                 },
                 {
                   text: 'React',
+                  myCheck: false,
                   children: [
                     {
                       text: 'Next',
+                      myCheck: false,
                     },
                   ],
                 },
                 {
                   text: 'Angular',
+                  myCheck: false,
                 },
               ],
             },
             {
               text: 'Backend',
+              myCheck: false,
             },
           ],
         },
-        { text: 'Photos' },
-        { text: 'Videos' },
+        {
+          text: 'Photos',
+          myCheck: false,
+        },
+        {
+          text: 'Videos',
+          myCheck: false,
+        },
       ],
     }
   }
