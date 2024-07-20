@@ -27,6 +27,7 @@
   <v-navigation-drawer
     v-model="drawer"
   >
+    <!-- nav だとどこを選択しているかを自動で色付けしてくれるっぽい -->
     <v-list nav>
       <!-- https://pictogrammers.com/library/mdi/icon/video-3d-variant/ -->
       <!-- valueを同値にすると選択カラーが設定されてしまう -->
@@ -35,20 +36,30 @@
           <v-icon :icon="mdiHomeAccount" />
         </template>
       </v-list-item>
-      <v-list-item title="Chart" value="chart" @click="$router.push({ path: '/chart' })">
-        <template v-slot:prepend>
-          <v-icon :icon="mdiChartBar" />
-        </template>
-      </v-list-item>
-      <v-list-item title="Chart2" value="chart2" @click="$router.push({ path: '/chart2' })">
-        <template v-slot:prepend>
-          <v-icon :icon="mdiChartBar" />
-        </template>
-      </v-list-item>
 
-      <v-list-group value="Admin">
+      <v-list-group value="Chartjs">
         <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props" title="Admin">
+          <v-list-item v-bind="props" title="Chartjs">
+            <template v-slot:prepend>
+              <v-icon :icon="mdiChartBar" />
+            </template>
+          </v-list-item>
+        </template>
+        <v-list-item title="Chart" value="chart" @click="$router.push({ path: '/chart' })">
+          <template v-slot:prepend>
+            <v-icon :icon="mdiChartBar" />
+          </template>
+        </v-list-item>
+        <v-list-item title="Chart2" value="chart2" @click="$router.push({ path: '/chart2' })">
+          <template v-slot:prepend>
+            <v-icon :icon="mdiChartBar" />
+          </template>
+        </v-list-item>
+      </v-list-group>
+
+      <v-list-group value="Plotly">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" title="Plotly">
             <template v-slot:prepend>
               <v-icon :icon="mdiChartBar" />
             </template>
