@@ -55,6 +55,11 @@
             <v-icon :icon="mdiChartBar" />
           </template>
         </v-list-item>
+        <v-list-item title="Chart3" value="chart3" @click="$router.push({ path: '/chartjs/chart3' })">
+          <template v-slot:prepend>
+            <v-icon :icon="mdiChartBar" />
+          </template>
+        </v-list-item>
       </v-list-group>
 
       <v-list-group value="Plotly">

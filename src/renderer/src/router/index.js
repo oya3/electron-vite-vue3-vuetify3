@@ -18,6 +18,11 @@ const routes = [
     name: 'Chart2',
     component: () => import('../views/Chartjs/ChartComposition.vue'),
   },
+  {
+    path: '/chartjs/chart3',
+    name: 'Chart3',
+    component: () => import('../views/Chartjs/ChartTimeLine.vue'),
+  },
   // Plotly
   {
     path: '/plotly/bar',
