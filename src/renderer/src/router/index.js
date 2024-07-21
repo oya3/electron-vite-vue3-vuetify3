@@ -8,19 +8,14 @@ const routes = [
     component: Home,
   },
   {
-    path: '/listtest',
-    name: 'ListTest',
-    component: () => import('../views/ListTest.vue'),
+    path: '/chartjs/chart1',
+    name: 'Chart1',
+    component: () => import('../views/Chartjs/Chart.vue'),
   },
   {
-    path: '/chart',
-    name: 'Chart',
-    component: () => import('../views/Chart.vue'),
-  },
-  {
-    path: '/chart2',
+    path: '/chartjs/chart2',
     name: 'Chart2',
-    component: () => import('../views/ChartComposition.vue'),
+    component: () => import('../views/Chartjs/ChartComposition.vue'),
   },
   {
     path: '/plotly/bar',
@@ -35,17 +30,22 @@ const routes = [
   {
     path: '/model3d',
     name: 'Model3D',
-    component: () => import('../views/Model3D.vue'),
+    component: () => import('../views/Model3D/Model3D.vue'),
   },
   {
     path: '/model3d2',
     name: 'Model3D2',
-    component: () => import('../views/Model3DComposition.vue'),
+    component: () => import('../views/Model3D/Model3DComposition.vue'),
   },
   {
     path: '/about',
     name: 'About',
     component: () => import('../views/About.vue'),
+  },
+  {
+    path: '/listtest',
+    name: 'ListTest',
+    component: () => import('../views/ListTest.vue'),
   },
 ];
 

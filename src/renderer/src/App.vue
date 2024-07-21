@@ -45,12 +45,12 @@
             </template>
           </v-list-item>
         </template>
-        <v-list-item title="Chart" value="chart" @click="$router.push({ path: '/chart' })">
+        <v-list-item title="Chart1" value="chart1" @click="$router.push({ path: '/chartjs/chart1' })">
           <template v-slot:prepend>
             <v-icon :icon="mdiChartBar" />
           </template>
         </v-list-item>
-        <v-list-item title="Chart2" value="chart2" @click="$router.push({ path: '/chart2' })">
+        <v-list-item title="Chart2" value="chart2" @click="$router.push({ path: '/chartjs/chart2' })">
           <template v-slot:prepend>
             <v-icon :icon="mdiChartBar" />
           </template>
@@ -77,16 +77,26 @@
         </v-list-item>
       </v-list-group>
 
-      <v-list-item title="Model3D" value="model3d" @click="$router.push({ path: '/model3d' })">
-        <template v-slot:prepend>
-          <v-icon :icon="mdiVideo3dVariant" />
+      <v-list-group value="Model3D">
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" title="Model3D">
+            <template v-slot:prepend>
+              <v-icon :icon="mdiChartBar" />
+            </template>
+          </v-list-item>
         </template>
-      </v-list-item>
-      <v-list-item title="Model3D2" value="model3d2" @click="$router.push({ path: '/model3d2' })">
-        <template v-slot:prepend>
-          <v-icon :icon="mdiVideo3dVariant" />
-        </template>
-      </v-list-item>
+        <v-list-item title="Model3D1" value="model3d1" @click="$router.push({ path: '/model3d' })">
+          <template v-slot:prepend>
+            <v-icon :icon="mdiVideo3dVariant" />
+          </template>
+        </v-list-item>
+        <v-list-item title="Model3D2" value="model3d2" @click="$router.push({ path: '/model3d2' })">
+          <template v-slot:prepend>
+            <v-icon :icon="mdiVideo3dVariant" />
+          </template>
+        </v-list-item>
+      </v-list-group>
+
       <v-list-item title="About" value="about" @click="$router.push({ path: '/about' })">
         <template v-slot:prepend>
           <v-icon :icon="mdiInformationOutline" />
