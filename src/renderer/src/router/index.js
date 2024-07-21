@@ -7,6 +7,7 @@ const routes = [
     name: 'Home',
     component: Home,
   },
+  // Chartjs
   {
     path: '/chartjs/chart1',
     name: 'Chart1',
@@ -17,6 +18,7 @@ const routes = [
     name: 'Chart2',
     component: () => import('../views/Chartjs/ChartComposition.vue'),
   },
+  // Plotly
   {
     path: '/plotly/bar',
     name: 'PlotlyBar',
@@ -27,16 +29,18 @@ const routes = [
     name: 'PlotlyGantt',
     component: () => import('../views/Plotly/Gantt.vue'),
   },
+  // Model3D
   {
-    path: '/model3d',
-    name: 'Model3D',
+    path: '/model3d/model3d1',
+    name: 'Model3D1',
     component: () => import('../views/Model3D/Model3D.vue'),
   },
   {
-    path: '/model3d2',
+    path: '/model3d/model3d2',
     name: 'Model3D2',
     component: () => import('../views/Model3D/Model3DComposition.vue'),
   },
+  // その他
   {
     path: '/about',
     name: 'About',

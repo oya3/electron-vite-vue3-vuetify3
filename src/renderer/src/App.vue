@@ -85,12 +85,12 @@
             </template>
           </v-list-item>
         </template>
-        <v-list-item title="Model3D1" value="model3d1" @click="$router.push({ path: '/model3d' })">
+        <v-list-item title="Model3D1" value="model3d1" @click="$router.push({ path: '/model3d/model3d1' })">
           <template v-slot:prepend>
             <v-icon :icon="mdiVideo3dVariant" />
           </template>
         </v-list-item>
-        <v-list-item title="Model3D2" value="model3d2" @click="$router.push({ path: '/model3d2' })">
+        <v-list-item title="Model3D2" value="model3d2" @click="$router.push({ path: '/model3d/model3d2' })">
           <template v-slot:prepend>
             <v-icon :icon="mdiVideo3dVariant" />
           </template>
