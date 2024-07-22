@@ -104,9 +104,17 @@ const options = reactive({
   scales: {
     y: {
       stacked: true,
+      grid: {
+        // light, dark テーマ両方でグリッド線が見える色に変更
+        color: 'rgba(128, 128, 128, 0.5)',
+      },
     },
     x: {
       type: 'time',
+      grid: {
+        // light, dark テーマ両方でグリッド線が見える色に変更
+        color: 'rgba(128, 128, 128, 0.5)',
+      },
       time: {
         // Luxon format string
         // tooltipFormat: 'yyyy/MM/dd HH:mm:ss',
