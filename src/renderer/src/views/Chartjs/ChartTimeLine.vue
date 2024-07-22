@@ -47,6 +47,8 @@ const data = reactive({
         [new Date('2021-09-11T00:00:00'), new Date('2021-09-13T00:00:00')],
       ],
       backgroundColor: "red",
+      barPercentage: 0.5,
+      categoryPercentage: 0.5,
     },
     {
       label: 'Task 2',
@@ -55,6 +57,8 @@ const data = reactive({
         [new Date('2021-09-14T00:00:00'), new Date('2021-09-15T00:00:00')],
       ],
       backgroundColor: "blue",
+      barPercentage: 0.5,
+      categoryPercentage: 0.5,
     },
     {
       label: 'Task 3',
@@ -63,6 +67,8 @@ const data = reactive({
         [new Date('2021-09-16T00:00:00'), new Date('2021-09-18T00:00:00')],
       ],
       backgroundColor: "orange",
+      barPercentage: 0.5,
+      categoryPercentage: 0.5,
     },
   ],
 });
@@ -78,6 +84,22 @@ const options = reactive({
       display: true,
       text: 'Chart.js Floating Horizontal Bar Chart',
     },
+    tooltip: {
+      callbacks: {
+        label: function(context) {
+          var label = context.dataset.label || '';
+          if (label) {
+            label += ': ';
+          }
+          if (context.raw.length) {
+            label += new Date(context.raw[0]).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }) + ' ~ ' + new Date(context.raw[1]).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+          } else {
+            label += context.raw !== null ? new Date(context.raw).toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }) : '';
+          }
+          return label;
+        }
+      }
+    }
   },
   scales: {
     y: {
@@ -87,7 +109,13 @@ const options = reactive({
       type: 'time',
       time: {
         // Luxon format string
-        tooltipFormat: 'DD',
+        // tooltipFormat: 'yyyy/MM/dd HH:mm:ss',
+        tooltipFormat: 'yyyy/MM/dd',
+        displayFormats: {
+          day: 'yyyy/MM/dd'
+        },
+        unit: 'day',
+        timeZone: 'Asia/Tokyo', // タイムゾーンを設定
       },
       min: new Date('2021-09-11T00:00:00'),
       max: new Date('2021-09-18T00:00:00'),
