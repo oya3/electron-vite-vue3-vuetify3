@@ -68,7 +68,7 @@ const data = reactive({
 });
 
 const options = reactive({
-  responsive: false,
+  responsive: true,
   indexAxis: 'y',
   plugins: {
     legend: {
